@@ -1,5 +1,6 @@
 import React from 'react';
 import { AppRegistry } from 'react-native';
+
 import HomerQuotes from './src/screens/homer-quotes';
 
 const App = () => <HomerQuotes />;

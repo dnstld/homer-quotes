@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, TouchableOpacity, Text, View, SafeAreaView, Image } from 'react-native';
+import { RockSalt_400Regular, useFonts } from '@expo-google-fonts/rock-salt';
+import React, { useEffect, useState } from 'react';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
-import { useFonts, RockSalt_400Regular } from '@expo-google-fonts/rock-salt';
 
 const quotesArray = [
-  "Nobody -- that’s my name. Nobody -- so my mother and father call me, all my friends.",
-  "Her gifts were mixed with good and evil both.",
-  "Man is the vainest of all creatures that have their being upon earth.",
-  "There is a time for making speeches, and a time for going to bed.",
-  "For there is nothing better in this world than that man and wife should be of one mind in a house.",
-  "Be strong, saith my heart; I am a soldier; I have seen worse sights than this.",
-  "The proud heart feels not terror nor turns to run and it is his own courage that kills him.",
-  "I say no wealth is worth my life!",
-  "My life is more to me than all the wealth of Ilius",
-  "If only the gods are willing. They rule the vaulting skies. They’re stronger than I to plan and drive things home.",
+  'Nobody -- that’s my name. Nobody -- so my mother and father call me, all my friends.',
+  'Her gifts were mixed with good and evil both.',
+  'Man is the vainest of all creatures that have their being upon earth.',
+  'There is a time for making speeches, and a time for going to bed.',
+  'For there is nothing better in this world than that man and wife should be of one mind in a house.',
+  'Be strong, saith my heart; I am a soldier; I have seen worse sights than this.',
+  'The proud heart feels not terror nor turns to run and it is his own courage that kills him.',
+  'I say no wealth is worth my life!',
+  'My life is more to me than all the wealth of Ilius',
+  'If only the gods are willing. They rule the vaulting skies. They’re stronger than I to plan and drive things home.',
 ];
 
 const RandomQuoteApp = () => {
@@ -26,7 +33,7 @@ const RandomQuoteApp = () => {
 
   useEffect(() => {
     pickRandomQuote();
-  }, []);
+  });
 
   const pickRandomQuote = () => {
     if (availableQuotes.length === 0) {
@@ -38,7 +45,9 @@ const RandomQuoteApp = () => {
     const selectedQuote = availableQuotes[randomIndex];
 
     // Remove the selected quote from the availableQuotes array
-    const updatedQuotes = availableQuotes.filter((_, index) => index !== randomIndex);
+    const updatedQuotes = availableQuotes.filter(
+      (_, index) => index !== randomIndex,
+    );
 
     setQuote(selectedQuote);
     setAvailableQuotes(updatedQuotes);
@@ -55,11 +64,11 @@ const RandomQuoteApp = () => {
 
   if (!fontsLoaded && !fontError) {
     return null;
-  };
+  }
 
   return (
     <>
-      <SafeAreaView style={{ flex: 0, backgroundColor: "#00AAFF" }} />
+      <SafeAreaView style={{ flex: 0, backgroundColor: '#00AAFF' }} />
       <View style={styles.container}>
         <View style={styles.content}>
           <View style={styles.quoteContainer}>
@@ -67,16 +76,27 @@ const RandomQuoteApp = () => {
               mode={ResizeTextMode.group}
               adjustsFontSizeToFit
               style={styles.quote}>
-                {`"${quote}"`}
+              {`"${quote}"`}
             </AutoSizeText>
           </View>
-          <Image style={styles.homer} source={require('./images/HomerSimpson.png')} />
+          <Image
+            style={styles.homer}
+            source={require('./images/HomerSimpson.png')}
+          />
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={[styles.button, styles.buttonPrimary]} onPress={pickRandomQuote}>
-              <Text style={[styles.buttonText, styles.buttonTextPrimary]}>Homer J. Simpson</Text>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonPrimary]}
+              onPress={pickRandomQuote}>
+              <Text style={[styles.buttonText, styles.buttonTextPrimary]}>
+                Homer J. Simpson
+              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.button, styles.buttonSecondary]} onPress={share}>
-              <Text style={[styles.buttonText, styles.buttonTextSecondary]}>Share</Text>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonSecondary]}
+              onPress={share}>
+              <Text style={[styles.buttonText, styles.buttonTextSecondary]}>
+                Share
+              </Text>
             </TouchableOpacity>
           </View>
           <SafeAreaView style={{ flex: 0, backgroundColor: '#fff' }} />
@@ -93,7 +113,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'space-evenly'
+    justifyContent: 'space-evenly',
   },
   quoteContainer: {
     flex: 1,
@@ -115,13 +135,13 @@ const styles = StyleSheet.create({
   button: {
     padding: 16,
     borderRadius: 16,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   buttonPrimary: {
     backgroundColor: '#F8659F',
     borderColor: '#fff',
     borderWidth: 1,
-    flex: 1
+    flex: 1,
   },
   buttonSecondary: {
     borderColor: '#F8659F',
@@ -136,11 +156,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   buttonTextSecondary: {
-    color: '#F8659F'
+    color: '#F8659F',
   },
   homer: {
-    left: 16
-  }
+    left: 16,
+  },
 });
 
 export default RandomQuoteApp;
