@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { RockSalt_400Regular, useFonts } from '@expo-google-fonts/rock-salt';
 import React, { useEffect, useState } from 'react';
 import {
@@ -33,7 +34,7 @@ const RandomQuoteApp = () => {
 
   useEffect(() => {
     pickRandomQuote();
-  });
+  }, []);
 
   const pickRandomQuote = () => {
     if (availableQuotes.length === 0) {
