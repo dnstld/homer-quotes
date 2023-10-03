@@ -7,9 +7,9 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test:eslint": "echo \"\\033[33mRunning eslint check\" && npx eslint .",
-    "test:fix": "npx eslint . --ext .js --ext .ts --ext .tsx --fix",
-    "test:tsc": "echo \"\\033[33mRunning typescript check\" && npx tsc"
+    "lint": "echo \"\\033[33mRunning eslint check\" && npx eslint .",
+    "lint:fix": "npx eslint . --ext .js --ext .ts --ext .tsx --fix",
+    "tsc": "echo \"\\033[33mRunning typescript check\" && npx tsc"
   },
   "dependencies": {
     "@expo-google-fonts/rock-salt": "^0.2.3",
