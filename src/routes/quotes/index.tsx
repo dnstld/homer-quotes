@@ -1,15 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { RockSalt_400Regular, useFonts } from '@expo-google-fonts/rock-salt';
 import React, { useEffect, useState } from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
+import { Image, SafeAreaView, StyleSheet, View } from 'react-native';
+
+import { Button } from '../../components/button';
+import { Quote } from '../../components/quote';
+import { ScreenProps as QuotesScreenProps } from '../__layout/type';
 
 const quotesArray = [
   'Nobody -- that’s my name. Nobody -- so my mother and father call me, all my friends.',
@@ -24,13 +19,9 @@ const quotesArray = [
   'If only the gods are willing. They rule the vaulting skies. They’re stronger than I to plan and drive things home.',
 ];
 
-const RandomQuoteApp = () => {
+const Quotes = ({ navigation }: QuotesScreenProps<'Quotes'>) => {
   const [quote, setQuote] = useState('');
   const [availableQuotes, setAvailableQuotes] = useState([...quotesArray]);
-
-  const [fontsLoaded, fontError] = useFonts({
-    RockSalt_400Regular,
-  });
 
   useEffect(() => {
     pickRandomQuote();
@@ -59,46 +50,25 @@ const RandomQuoteApp = () => {
     }
   };
 
-  const share = () => {
-    // TBD
-  };
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
-
   return (
     <>
       <SafeAreaView style={{ flex: 0, backgroundColor: '#00AAFF' }} />
       <View style={styles.container}>
         <View style={styles.content}>
-          <View style={styles.quoteContainer}>
-            <AutoSizeText
-              mode={ResizeTextMode.group}
-              adjustsFontSizeToFit
-              style={styles.quote}>
-              {`"${quote}"`}
-            </AutoSizeText>
-          </View>
+          <Quote quote={quote} />
+
           <Image
             style={styles.homer}
             source={require('./images/HomerSimpson.png')}
           />
+
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonPrimary]}
-              onPress={pickRandomQuote}>
-              <Text style={[styles.buttonText, styles.buttonTextPrimary]}>
-                Homer J. Simpson
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.button, styles.buttonSecondary]}
-              onPress={share}>
-              <Text style={[styles.buttonText, styles.buttonTextSecondary]}>
-                Share
-              </Text>
-            </TouchableOpacity>
+            <Button title="Homer J. Simpson" onPress={pickRandomQuote} />
+            <Button
+              title="Share"
+              onPress={() => navigation.navigate('Share')}
+              secondary
+            />
           </View>
           <SafeAreaView style={{ flex: 0, backgroundColor: '#fff' }} />
         </View>
@@ -116,16 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-evenly',
   },
-  quoteContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 32,
-  },
-  quote: {
-    color: '#fff',
-    textAlign: 'center',
-    fontFamily: 'RockSalt_400Regular',
-  },
   buttonsContainer: {
     flexDirection: 'row',
     gap: 16,
@@ -133,35 +93,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: '#fff',
   },
-  button: {
-    padding: 16,
-    borderRadius: 16,
-    justifyContent: 'center',
-  },
-  buttonPrimary: {
-    backgroundColor: '#F8659F',
-    borderColor: '#fff',
-    borderWidth: 1,
-    flex: 1,
-  },
-  buttonSecondary: {
-    borderColor: '#F8659F',
-    borderWidth: 1,
-  },
-  buttonText: {
-    color: '#fff',
-    textAlign: 'center',
-  },
-  buttonTextPrimary: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  buttonTextSecondary: {
-    color: '#F8659F',
-  },
   homer: {
     left: 16,
   },
 });
 
-export default RandomQuoteApp;
+export default Quotes;
