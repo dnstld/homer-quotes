@@ -5,9 +5,10 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 
 type Props = {
   quote: string;
+  group?: boolean;
 };
 
-export const Quote = ({ quote }: Props) => {
+export const Quote = ({ quote, group = true }: Props) => {
   const [fontsLoaded, fontError] = useFonts({
     RockSalt_400Regular,
   });
@@ -17,6 +18,7 @@ export const Quote = ({ quote }: Props) => {
       {!fontsLoaded && !fontError ? (
         <ActivityIndicator size="large" color="#fff" />
       ) : (
+        // @ts-ignore
         <AutoSizeText
           mode={ResizeTextMode.group}
           adjustsFontSizeToFit
@@ -32,7 +34,6 @@ const styles = StyleSheet.create({
   quoteContainer: {
     flex: 1,
     justifyContent: 'center',
-    padding: 32,
   },
   quote: {
     color: '#fff',

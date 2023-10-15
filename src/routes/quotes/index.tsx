@@ -55,18 +55,20 @@ const Quotes = ({ navigation }: QuotesScreenProps<'Quotes'>) => {
       <SafeAreaView style={{ flex: 0, backgroundColor: '#00AAFF' }} />
       <View style={styles.container}>
         <View style={styles.content}>
-          <Quote quote={quote} />
+          <View style={styles.quoteContainer}>
+            <Quote quote={quote} />
+          </View>
 
           <Image
             style={styles.homer}
-            source={require('./images/HomerSimpson.png')}
+            source={require('../../assets/images/HomerSimpson.png')}
           />
 
           <View style={styles.buttonsContainer}>
             <Button title="Homer J. Simpson" onPress={pickRandomQuote} />
             <Button
               title="Share"
-              onPress={() => navigation.navigate('Share')}
+              onPress={() => navigation.navigate('Share', { quote })}
               secondary
             />
           </View>
@@ -85,6 +87,10 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     justifyContent: 'space-evenly',
+  },
+  quoteContainer: {
+    flex: 1,
+    padding: 32,
   },
   buttonsContainer: {
     flexDirection: 'row',
