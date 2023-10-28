@@ -1,5 +1,15 @@
-import React, { useCallback, useRef } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import React, { useCallback, useRef, useState } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 import ViewShot from 'react-native-view-shot';
 
 import { Quote } from '../../components/quote';
@@ -7,28 +17,106 @@ import { ScreenProps as ShareScreenProps } from '../__layout/type';
 
 const Share = ({ route }: ShareScreenProps<'Share'>) => {
   const { quote } = route.params;
+  const [URI, setURI] = useState('');
 
-  const full = useRef();
+  const ref = useRef();
 
   const onImageLoad = useCallback(() => {
-    // onCapture();
+    onCapture();
   }, []);
 
   const onCapture = useCallback(() => {
     // @ts-ignore
-    full.current.capture().then(uri => console.log('Saved to: ', uri));
+    ref.current.capture().then(uri => setURI(uri));
   }, []);
 
-  const onShare = () => {
-    onCapture();
+  const imageOptions = {
+    dialogTitle: 'HomerQuotesApp',
+    mimeType: 'image/jpeg',
+  };
+
+  const save = async () => {
+    if (Platform.OS === 'android') {
+      const permissions =
+        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+      if (permissions.granted) {
+        const base64 = await FileSystem.readAsStringAsync(URI, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+        await FileSystem.StorageAccessFramework.createFileAsync(
+          permissions.directoryUri,
+          imageOptions.dialogTitle,
+          imageOptions.mimeType,
+        )
+          .then(async URI => {
+            await FileSystem.writeAsStringAsync(URI, base64, {
+              encoding: FileSystem.EncodingType.Base64,
+            });
+            showMessage({
+              message: `Success`,
+              description: 'This is the description',
+              type: 'default',
+              backgroundColor: '#F8659F',
+              color: '#fff',
+            });
+          })
+          .catch(e =>
+            showMessage({
+              message: `Error: ${e}`,
+              description: 'This is the description',
+              type: 'info',
+            }),
+          );
+      } else {
+        Sharing.shareAsync(URI, imageOptions)
+          .then(() =>
+            showMessage({
+              message: `Success`,
+              description: 'This is the description',
+              type: 'default',
+              backgroundColor: '#F8659F',
+              color: '#fff',
+            }),
+          )
+          .catch(e =>
+            showMessage({
+              message: `Error: ${e}`,
+              description: 'This is the description',
+              type: 'info',
+            }),
+          );
+      }
+    } else {
+      Sharing.shareAsync(URI, imageOptions)
+        .then(() =>
+          showMessage({
+            message: `Success`,
+            description: 'This is the description',
+            type: 'default',
+            backgroundColor: '#F8659F',
+            color: '#fff',
+          }),
+        )
+        .catch(e =>
+          showMessage({
+            message: `Error: ${e}`,
+            description: 'This is the description',
+            type: 'info',
+          }),
+        );
+    }
   };
 
   return (
     <View style={styles.container}>
       <ViewShot
         // @ts-ignore
-        ref={full}
-        options={{ fileName: 'HomerQuotes', format: 'jpg', quality: 0.9 }}>
+        ref={ref}
+        options={{
+          fileName: imageOptions.dialogTitle,
+          format: 'jpg',
+          quality: 1,
+        }}>
         <View style={styles.frame}>
           <View style={styles.profileContainer}>
             <Image
@@ -47,9 +135,14 @@ const Share = ({ route }: ShareScreenProps<'Share'>) => {
           </View>
         </View>
       </ViewShot>
-      <TouchableOpacity onPress={onCapture}>
-        <Text>Share now</Text>
-      </TouchableOpacity>
+
+      <View style={styles.actions}>
+        <TouchableOpacity onPress={save}>
+          <Text>Save</Text>
+        </TouchableOpacity>
+      </View>
+
+      <FlashMessage position="bottom" />
     </View>
   );
 };
@@ -90,6 +183,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 8,
     marginTop: 2,
+  },
+  actions: {
+    flexDirection: 'row',
+    padding: 16,
+    gap: 32,
   },
 });
 
