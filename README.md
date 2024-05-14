@@ -21,3 +21,10 @@ Icons from: https://icons.expo.fyi/Index
 ```
 <FoodListItem item={{ label: "Pizza", cal: 75, brand: "Dominos" }} />
 ```
+
+4. Create Search and FlatList elements
+
+```
+<TextInput />
+<FlatList />
+```
