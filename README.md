@@ -28,3 +28,15 @@ Icons from: https://icons.expo.fyi/Index
 <TextInput />
 <FlatList />
 ```
+
+4. Fetch REST API
+
+API: https://developer.edamam.com/food-database-api-docs
+apollo-link-rest: https://github.com/apollographql/apollo-link-rest
+
+```
+const restLink = new RestLink({
+  uri: "https://api.edamam.com/api/food-database/v2/parser?app_id=000&app_key=000",
+});
+
+```

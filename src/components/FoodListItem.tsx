@@ -2,17 +2,20 @@ import { View, Text, StyleSheet } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 interface Props {
-  item: { label: string; cal: number; brand: string };
+  food: {
+    label: string;
+    nutrients: { ENERC_KCAL: number };
+  };
 }
 
-const FoodListItem = ({ item }: Props) => {
-  const { label, cal, brand } = item;
+const FoodListItem = ({ food }: Props) => {
+  const { label, nutrients } = food;
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.label}>{label}</Text>
         <Text style={styles.brand}>
-          {cal} cal, {brand}
+          {nutrients?.ENERC_KCAL} cal, {label}
         </Text>
       </View>
       <AntDesign name="pluscircleo" size={24} color="royalblue" />
