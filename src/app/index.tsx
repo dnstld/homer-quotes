@@ -17,7 +17,6 @@ const query = gql`
 
 export default function IndexScreen() {
   const { data, loading, error } = useQuery(query);
-  console.log("===", data);
 
   if (error) return <Text>Error</Text>;
 
@@ -27,7 +26,7 @@ export default function IndexScreen() {
 
       {loading && <Text>Loading...</Text>}
       <FlatList
-        data={data.quotes}
+        data={data?.quotes}
         renderItem={({ item }) => {
           return <QuoteListItem {...item} />;
         }}

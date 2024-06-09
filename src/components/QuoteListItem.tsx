@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Link } from "expo-router";
 
 interface Props {
   quote: string;
@@ -8,14 +9,22 @@ interface Props {
 
 const QuoteListItem = ({ quote, author, category }: Props) => {
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.label}>{quote}</Text>
-        <Text style={styles.brand}>
-          {author}: {category}
-        </Text>
-      </View>
-    </View>
+    <Link
+      href={{
+        pathname: "/quote/[id]",
+        params: { id: "design" },
+      }}
+      asChild
+    >
+      <Pressable>
+        <View>
+          <Text style={styles.label}>{quote}</Text>
+          <Text style={styles.brand}>
+            {author}: {category}
+          </Text>
+        </View>
+      </Pressable>
+    </Link>
   );
 };
 
