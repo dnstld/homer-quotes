@@ -3,7 +3,10 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { RestLink } from "apollo-link-rest";
 
 const restLink = new RestLink({
-  uri: `${process.env.EXPO_PUBLIC_EDEMAM_ENDPOINT}?app_id=${process.env.EXPO_PUBLIC_EDEMAM_API_ID}&app_key=${process.env.EXPO_PUBLIC_EDEMAM_APP_KEY}`,
+  uri: "https://api.api-ninjas.com/v1/quotes",
+  headers: {
+    "X-Api-Key": `20ZVM+KgCtg1b+UA1/fVmQ==7NBfOWkyJWb8gcxe`,
+  },
 });
 
 const client = new ApolloClient({

@@ -1,25 +1,20 @@
 import { View, Text, StyleSheet } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 
 interface Props {
-  food: {
-    label: string;
-    brand: string;
-    nutrients: { ENERC_KCAL: number };
-  };
+  quote: string;
+  author: string;
+  category: string;
 }
 
-const FoodListItem = ({ food }: Props) => {
-  const { label, nutrients, brand } = food;
+const QuoteListItem = ({ quote, author, category }: Props) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={styles.label}>{quote}</Text>
         <Text style={styles.brand}>
-          {nutrients?.ENERC_KCAL} cal, {label}
+          {author}: {category}
         </Text>
       </View>
-      <AntDesign name="pluscircleo" size={24} color="royalblue" />
     </View>
   );
 };
@@ -38,4 +33,4 @@ const styles = StyleSheet.create({
   brand: { color: "dimgray" },
 });
 
-export default FoodListItem;
+export default QuoteListItem;

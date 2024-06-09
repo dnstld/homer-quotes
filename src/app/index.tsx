@@ -1,57 +1,56 @@
-import { Link } from "expo-router";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import FoodListItem from "../components/FoodListItem";
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, View, FlatList, Text } from "react-native";
 
-const FoodItems = [
-  {
-    food: {
-      label: "Pizza",
-      brand: "Dominos",
-      nutrients: { ENERC_KCAL: 300 },
-    },
-  },
-  {
-    food: {
-      label: "Burger",
-      brand: "McDonalds",
-      nutrients: { ENERC_KCAL: 500 },
-    },
-  },
-  {
-    food: {
-      label: "Pasta",
-      brand: "Olive Garden",
-      nutrients: { ENERC_KCAL: 400 },
-    },
-  },
-];
+import QuoteListItem from "../components/QuoteListItem";
 
-export default function HomeScreen() {
+import { gql, useQuery } from "@apollo/client";
+
+const query = gql`
+  query quotes {
+    quotes @rest(type: "Quote", path: "?category=humor") {
+      quote
+      author
+      category
+    }
+  }
+`;
+
+export default function IndexScreen() {
+  const { data, loading, error } = useQuery(query);
+  console.log("===", data);
+
+  if (error) return <Text>Error</Text>;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Today's logged food</Text>
+      <StatusBar style="auto" />
+
+      {loading && <Text>Loading...</Text>}
       <FlatList
-        data={FoodItems}
-        renderItem={({ item }) => <FoodListItem {...item} />}
+        data={data.quotes}
+        renderItem={({ item }) => {
+          return <QuoteListItem {...item} />;
+        }}
+        ListEmptyComponent={<Text>Empty</Text>}
         contentContainerStyle={styles.contentContainer}
       />
-      <Link href="/search">Add food</Link>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
     flex: 1,
+    backgroundColor: "#fff",
     padding: 16,
-    gap: 16,
+    gap: 8,
   },
   contentContainer: {
     gap: 4,
   },
-  title: {
-    fontWeight: "500",
-    fontSize: 16,
+  input: {
+    backgroundColor: "gainsboro",
+    padding: 16,
+    borderRadius: 8,
   },
 });

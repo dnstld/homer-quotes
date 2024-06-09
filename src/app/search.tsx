@@ -9,7 +9,7 @@ import {
   Keyboard,
 } from "react-native";
 
-import FoodListItem from "../components/FoodListItem";
+import QuoteListItem from "../components/QuoteListItem";
 import { useState } from "react";
 
 import { gql, useLazyQuery } from "@apollo/client";
@@ -63,7 +63,7 @@ export default function SearchScreen() {
       <FlatList
         data={data?.search?.hints}
         renderItem={({ item }) => {
-          return <FoodListItem {...item} />;
+          return <QuoteListItem {...item} />;
         }}
         ListEmptyComponent={
           <Text>{`${loading ? "Searching" : "Search for something!"}`}</Text>
