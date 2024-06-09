@@ -4,12 +4,13 @@ import { AntDesign } from "@expo/vector-icons";
 interface Props {
   food: {
     label: string;
+    brand: string;
     nutrients: { ENERC_KCAL: number };
   };
 }
 
 const FoodListItem = ({ food }: Props) => {
-  const { label, nutrients } = food;
+  const { label, nutrients, brand } = food;
   return (
     <View style={styles.container}>
       <View>
