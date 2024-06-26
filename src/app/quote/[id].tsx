@@ -5,10 +5,8 @@ import { useEffect } from "react";
 
 const query = gql`
   query quote {
-    quote @rest(type: "Quote", path: "?category={args.id}") {
+    quote @rest(type: "Quote", path: "?character=homer%20simpson") {
       quote
-      author
-      category
     }
   }
 `;

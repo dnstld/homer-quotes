@@ -3,25 +3,20 @@ import { Link } from "expo-router";
 
 interface Props {
   quote: string;
-  author: string;
-  category: string;
 }
 
-const QuoteListItem = ({ quote, author, category }: Props) => {
+const QuoteListItem = ({ quote }: Props) => {
   return (
     <Link
       href={{
         pathname: "/quote/[id]",
-        params: { id: "design" },
+        params: { id: "quoteID" },
       }}
       asChild
     >
       <Pressable>
         <View>
           <Text style={styles.label}>{quote}</Text>
-          <Text style={styles.brand}>
-            {author}: {category}
-          </Text>
         </View>
       </Pressable>
     </Link>
@@ -39,7 +34,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   label: { fontWeight: "bold", fontSize: 16 },
-  brand: { color: "dimgray" },
 });
 
 export default QuoteListItem;

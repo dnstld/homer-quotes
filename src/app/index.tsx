@@ -7,10 +7,8 @@ import { gql, useQuery } from "@apollo/client";
 
 const query = gql`
   query quotes {
-    quotes @rest(type: "Quote", path: "?category=humor") {
+    quotes @rest(type: "Quote", path: "?character=homer%20simpson") {
       quote
-      author
-      category
     }
   }
 `;
