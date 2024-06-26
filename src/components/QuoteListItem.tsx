@@ -2,15 +2,16 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
 
 interface Props {
+  id: string;
   quote: string;
 }
 
-const QuoteListItem = ({ quote }: Props) => {
+const QuoteListItem = ({ quote, id }: Props) => {
   return (
     <Link
       href={{
         pathname: "/quote/[id]",
-        params: { id: "quoteID" },
+        params: { id },
       }}
       asChild
     >

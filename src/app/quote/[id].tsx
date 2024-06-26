@@ -1,23 +1,31 @@
 import { View, Text } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { gql, useLazyQuery } from "@apollo/client";
-import { useEffect } from "react";
+import { gql, useQuery } from "@apollo/client";
 
 const query = gql`
-  query quote {
-    quote @rest(type: "Quote", path: "?character=homer%20simpson") {
-      quote
+  query quotes {
+    quotes @rest(type: "Quote", path: "/") {
+      id
+      data {
+        id
+        season
+        episode
+        time
+        name
+        quote
+      }
     }
   }
 `;
 
 export default function QuoteScreen() {
   const { id } = useLocalSearchParams();
-  const [runSearch, { data, loading, error }] = useLazyQuery(query);
+  const { data, loading, error } = useQuery(query);
+  const quotes = data?.quotes?.data;
 
-  useEffect(() => {
-    runSearch({ variables: { id } });
-  }, []);
+  const quote = quotes?.find(
+    (quote: { id: string | undefined }) => quote.id === id
+  );
 
   if (error) return <Text>Error</Text>;
 
@@ -25,7 +33,7 @@ export default function QuoteScreen() {
     <View>
       {loading && <Text>Loading...</Text>}
 
-      <Text>{data?.quote[0].quote}</Text>
+      <Text>{quote.quote}</Text>
     </View>
   );
 }

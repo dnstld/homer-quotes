@@ -3,7 +3,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { RestLink } from "apollo-link-rest";
 
 const restLink = new RestLink({
-  uri: "https://thesimpsonsquoteapi.glitch.me/quotes",
+  uri: "https://api.sharedtattoo.com",
 });
 
 const client = new ApolloClient({

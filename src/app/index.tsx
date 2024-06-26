@@ -7,14 +7,23 @@ import { gql, useQuery } from "@apollo/client";
 
 const query = gql`
   query quotes {
-    quotes @rest(type: "Quote", path: "?character=homer%20simpson") {
-      quote
+    quotes @rest(type: "Quote", path: "/") {
+      id
+      data {
+        id
+        season
+        episode
+        time
+        name
+        quote
+      }
     }
   }
 `;
 
 export default function IndexScreen() {
   const { data, loading, error } = useQuery(query);
+  const quotes = data?.quotes?.data;
 
   if (error) return <Text>Error</Text>;
 
@@ -24,7 +33,7 @@ export default function IndexScreen() {
 
       {loading && <Text>Loading...</Text>}
       <FlatList
-        data={data?.quotes}
+        data={quotes}
         renderItem={({ item }) => {
           return <QuoteListItem {...item} />;
         }}
