@@ -10,7 +10,7 @@ const QuoteListItem = ({ quote, id }: Props) => {
   return (
     <Link
       href={{
-        pathname: "/quote/[id]",
+        pathname: "/share/[id]",
         params: { id },
       }}
       asChild

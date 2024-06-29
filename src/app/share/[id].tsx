@@ -18,7 +18,7 @@ const query = gql`
   }
 `;
 
-export default function QuoteScreen() {
+export default function ShareScreen() {
   const { id } = useLocalSearchParams();
   const { data, loading, error } = useQuery(query);
   const quotes = data?.quotes?.data;
