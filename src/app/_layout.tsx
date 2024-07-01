@@ -16,10 +16,13 @@ const RootLayout = () => {
   const router = useRouter();
   return (
     <ApolloProvider client={client}>
-      <Stack>
+      <Stack screenOptions={{ headerTintColor: "#00AAFF" }}>
         <Stack.Screen
           name="index"
-          options={{ headerTitle: "Back", headerShown: false }}
+          options={{
+            headerTitle: "Back",
+            headerShown: false,
+          }}
         />
         <Stack.Screen name="quotes/index" options={{ headerTitle: "List" }} />
         <Stack.Screen
@@ -29,7 +32,6 @@ const RootLayout = () => {
             headerLeft: () => (
               <Button title="Close" onPress={() => router.back()} />
             ),
-            headerRight: () => <Button title="Share" onPress={() => {}} />,
             presentation: "modal",
           }}
         />
