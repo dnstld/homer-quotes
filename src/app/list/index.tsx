@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 18,
     fontWeight: "bold",
-    backgroundColor: "#00AAFF",
+    backgroundColor: "#F8659F",
     color: "white",
   },
 });

@@ -6,28 +6,63 @@ import {
   Pressable,
   Dimensions,
   Image,
+  Animated,
+  ActivityIndicator,
 } from "react-native";
 
 import { Link } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Quote } from "../components/Quote";
 import QuotesContext, { QuoteProps } from "../context/quotes-context";
 
 const windowWidth = Dimensions.get("window").width;
+const initialFadeAnim = 0;
+const initialSlideAnim = 30;
 
 export default function IndexScreen() {
   const { quotes, loading } = useContext(QuotesContext);
   const [currentQuote, setCurrentQuote] = useState<QuoteProps>();
   const [usedQuotes, setUsedQuotes] = useState<Set<number>>(new Set());
   const [size, setSize] = useState({ width: 0, height: 0 });
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
+  const fadeAnim = useRef(new Animated.Value(initialFadeAnim)).current;
+  const slideAnim = useRef(new Animated.Value(initialSlideAnim)).current;
+  const imageSlideAnim = useRef(new Animated.Value(-windowWidth)).current;
 
   useEffect(() => {
     if (!loading && quotes.length > 0) {
       showRandomQuote();
     }
   }, [loading, quotes]);
+
+  useEffect(() => {
+    if (!loading && isImageLoaded) {
+      animateQuote();
+    }
+  }, [loading, isImageLoaded]);
+
+  const animateQuote = () => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(imageSlideAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
 
   const getRandomIndex = () => {
     return Math.floor(Math.random() * quotes.length + 1);
@@ -47,6 +82,11 @@ export default function IndexScreen() {
 
     setUsedQuotes((prevUsedQuotes) => new Set(prevUsedQuotes).add(randomIndex));
     setCurrentQuote(quotes[randomIndex - 1]);
+
+    // Reset animation values
+    fadeAnim.setValue(initialFadeAnim);
+    slideAnim.setValue(initialSlideAnim);
+    animateQuote();
   };
 
   return (
@@ -55,24 +95,50 @@ export default function IndexScreen() {
         <StatusBar style="auto" />
 
         <View style={styles.quoteContainer}>
-          {loading ? <Text>Loading...</Text> : <Quote {...currentQuote!} />}
-        </View>
-        <View style={styles.episodeContainer}>
-          <Text style={styles.name}>Homer J. Simpson</Text>
-          <Text
-            style={styles.ep}
-          >{`Episode ${currentQuote?.episode} Season ${currentQuote?.season} Time ${currentQuote?.time}`}</Text>
+          {loading ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator size="large" color="white" />
+            </View>
+          ) : (
+            <Animated.View
+              style={{
+                opacity: fadeAnim,
+                transform: [{ translateY: slideAnim }],
+                flex: 1,
+              }}
+            >
+              <Quote {...currentQuote!} />
+              <View style={styles.episodeContainer}>
+                <Text style={styles.name}>Homer J. Simpson</Text>
+                <Text
+                  style={styles.ep}
+                >{`Episode ${currentQuote?.episode} Season ${currentQuote?.season} Time ${currentQuote?.time}`}</Text>
+              </View>
+            </Animated.View>
+          )}
         </View>
         <View style={styles.footer}>
-          <View style={styles.imageContainer}>
-            <Image
-              style={[
-                styles.image,
-                { width: size.width, height: undefined, aspectRatio: 0.92 },
-              ]}
-              source={require("../assets/images/HomerSimpson.png")}
-            />
-          </View>
+          <Animated.View
+            style={{
+              transform: [{ translateX: imageSlideAnim }],
+            }}
+          >
+            <View style={styles.imageContainer}>
+              <Image
+                style={[
+                  styles.image,
+                  { width: size.width, height: undefined, aspectRatio: 0.92 },
+                ]}
+                source={require("../assets/images/HomerSimpson.png")}
+                onLoad={() => setIsImageLoaded(true)}
+              />
+            </View>
+          </Animated.View>
           <View
             style={styles.actionsContainer}
             onLayout={(event) => {

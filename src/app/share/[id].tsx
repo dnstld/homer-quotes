@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   profileContainer: {
     flexDirection: "row",
-    padding: 8,
+    padding: 16,
   },
   quoteContainer: {
     flex: 1,
