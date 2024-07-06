@@ -10,51 +10,41 @@ import {
   Button,
 } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { gql, useQuery } from "@apollo/client";
-import FlashMessage, { showMessage } from "react-native-flash-message";
 import ViewShot from "react-native-view-shot";
-import { Quote } from "../../components/quote";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
-
-const query = gql`
-  query quotes {
-    quotes @rest(type: "Quote", path: "/") {
-      id
-      data {
-        id
-        season
-        episode
-        time
-        name
-        quote
-      }
-    }
-  }
-`;
+import { Quote } from "../../components/Quote";
+import {
+  SetStateAction,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import QuotesContext from "../../context/quotes-context";
 
 const windowWidth = Dimensions.get("window").width;
 
 export default function ShareScreen() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
-  const { data, loading, error } = useQuery(query);
-  const quotes = data?.quotes?.data;
+  const { quotes, loading } = useContext(QuotesContext);
 
   const [URI, setURI] = useState("");
 
-  const ref = useRef();
-
-  const quote = quotes?.find(
-    (quote: { id: string | undefined }) => quote.id === id
-  );
+  const viewShot = useRef(null);
+  const quote = quotes.find((q) => q.id === id);
 
   const onImageLoad = useCallback(() => {
     onCapture();
   }, []);
 
   const onCapture = useCallback(() => {
-    // @ts-ignore
-    ref.current.capture().then((uri) => setURI(uri));
+    if (viewShot.current) {
+      viewShot.current
+        // @ts-ignore
+        .capture()
+        .then((uri: SetStateAction<string>) => setURI(uri));
+    }
   }, []);
 
   const imageOptions = {
@@ -79,58 +69,17 @@ export default function ShareScreen() {
             await FileSystem.writeAsStringAsync(URI, base64, {
               encoding: FileSystem.EncodingType.Base64,
             });
-            showMessage({
-              message: `Success`,
-              description: "This is the description",
-              type: "default",
-              backgroundColor: "#F8659F",
-              color: "#fff",
-            });
           })
-          .catch((e) =>
-            showMessage({
-              message: `Error: ${e}`,
-              description: "This is the description",
-              type: "info",
-            })
-          );
+          .catch((e) => console.warn(`Error: ${e.message} Code: ${e.code}`));
       } else {
         Sharing.shareAsync(URI, imageOptions)
-          .then(() =>
-            showMessage({
-              message: `Success`,
-              description: "This is the description",
-              type: "default",
-              backgroundColor: "#F8659F",
-              color: "#fff",
-            })
-          )
-          .catch((e) =>
-            showMessage({
-              message: `Error: ${e}`,
-              description: "This is the description",
-              type: "info",
-            })
-          );
+          .then(() => console.log("Success"))
+          .catch((e) => console.warn(`Error: ${e.message} Code: ${e.code}`));
       }
     } else {
       Sharing.shareAsync(URI, imageOptions)
-        .then(() =>
-          showMessage({
-            message: `Success`,
-            description: "This is the description",
-            type: "default",
-            backgroundColor: "#F8659F",
-            color: "#fff",
-          })
-        )
-        .catch((e) =>
-          showMessage({
-            message: `Error: ${e}`,
-            description: "This is the description",
-            type: "info",
-          })
-        );
+        .then(() => console.log("Success"))
+        .catch((e) => console.warn(`Error: ${e.message} Code: ${e.code}`));
     }
   };
 
@@ -140,15 +89,12 @@ export default function ShareScreen() {
     });
   }, [navigation, save]);
 
-  if (error) return <Text>Error</Text>;
-
   return (
     <View style={styles.container}>
       {loading && <Text>Loading...</Text>}
 
       <ViewShot
-        // @ts-ignore
-        ref={ref}
+        ref={viewShot}
         options={{
           fileName: imageOptions.dialogTitle,
           format: "jpg",
@@ -164,12 +110,18 @@ export default function ShareScreen() {
               onLoad={onImageLoad}
             />
             <View style={styles.profile}>
-              <Text style={styles.name}>Homer J. Simpson</Text>
+              <Text style={styles.name}>Homer Quotes</Text>
               <Text style={styles.social}>@homerquotesapp</Text>
             </View>
           </View>
           <View style={styles.quoteContainer}>
-            <Quote quote={quote.quote} />
+            <Quote {...quote!} />
+          </View>
+          <View style={styles.footer}>
+            <Text style={styles.footerName}>Homer J. Simpson</Text>
+            <Text
+              style={styles.footerText}
+            >{`Episode ${quote?.episode} Season ${quote?.season} Time ${quote?.time}`}</Text>
           </View>
         </View>
       </ViewShot>
@@ -193,10 +145,10 @@ const styles = StyleSheet.create({
   },
   quoteContainer: {
     flex: 1,
-    paddingHorizontal: 16,
+    padding: 16,
   },
   avatar: {
-    width: 32,
+    width: 48,
   },
   profile: {
     flex: 1,
@@ -205,12 +157,23 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "#fff",
-    fontSize: 10,
     fontWeight: "bold",
+  },
+  footer: {
+    padding: 16,
+    alignItems: "center",
+  },
+  footerName: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  footerText: {
+    color: "white",
   },
   social: {
     color: "#fff",
-    fontSize: 8,
     marginTop: 2,
   },
   actions: {

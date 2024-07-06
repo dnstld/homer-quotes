@@ -1,22 +1,12 @@
 import { Stack, useRouter } from "expo-router";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
-import { RestLink } from "apollo-link-rest";
 import { Button } from "react-native";
-
-const restLink = new RestLink({
-  uri: "https://api.sharedtattoo.com",
-});
-
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: restLink,
-});
+import { QuotesProvider } from "../context/quotes-context";
 
 const RootLayout = () => {
   const router = useRouter();
   return (
-    <ApolloProvider client={client}>
-      <Stack screenOptions={{ headerTintColor: "#00AAFF" }}>
+    <QuotesProvider>
+      <Stack screenOptions={{ headerTintColor: "white" }}>
         <Stack.Screen
           name="index"
           options={{
@@ -24,7 +14,13 @@ const RootLayout = () => {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="quotes/index" options={{ headerTitle: "List" }} />
+        <Stack.Screen
+          name="list/index"
+          options={{
+            headerTitle: "All Quotes",
+            headerStyle: { backgroundColor: "#00AAFF" },
+          }}
+        />
         <Stack.Screen
           name="share/[id]"
           options={{
@@ -37,10 +33,13 @@ const RootLayout = () => {
         />
         <Stack.Screen
           name="settings/index"
-          options={{ headerTitle: "Settings" }}
+          options={{
+            headerTitle: "Settings",
+            headerStyle: { backgroundColor: "#00AAFF" },
+          }}
         />
       </Stack>
-    </ApolloProvider>
+    </QuotesProvider>
   );
 };
 

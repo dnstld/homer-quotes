@@ -1,18 +1,13 @@
-import { RockSalt_400Regular, useFonts } from "@expo-google-fonts/rock-salt";
+import { Acme_400Regular, useFonts } from "@expo-google-fonts/acme";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
+import { QuoteProps } from "../context/quotes-context";
 
-type Props = {
-  quote: string;
-  group?: boolean;
-};
-
-export const Quote = ({ quote, group = true }: Props) => {
+export const Quote = ({ quote }: QuoteProps) => {
   const [fontsLoaded, fontError] = useFonts({
-    RockSalt_400Regular,
+    Acme_400Regular,
   });
-
   return (
     <View style={styles.quoteContainer}>
       {!fontsLoaded && !fontError ? (
@@ -24,7 +19,7 @@ export const Quote = ({ quote, group = true }: Props) => {
           adjustsFontSizeToFit
           style={styles.quote}
         >
-          {`"${quote}"`}
+          {quote}
         </AutoSizeText>
       )}
     </View>
@@ -39,6 +34,6 @@ const styles = StyleSheet.create({
   quote: {
     color: "#fff",
     textAlign: "center",
-    fontFamily: "RockSalt_400Regular",
+    fontFamily: "Acme_400Regular",
   },
 });

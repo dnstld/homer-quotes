@@ -6,7 +6,7 @@ interface Props {
   quote: string;
 }
 
-const QuoteListItem = ({ quote, id }: Props) => {
+const QuoteListItem = ({ quote, id, episode, time, name }: Props) => {
   return (
     <Link
       href={{
@@ -16,8 +16,9 @@ const QuoteListItem = ({ quote, id }: Props) => {
       asChild
     >
       <Pressable>
-        <View>
-          <Text style={styles.label}>{quote}</Text>
+        <View style={styles.item}>
+          <Text style={styles.quote}>{quote}</Text>
+          <Text style={styles.episode}>{`Episode ${episode}: ${name}`}</Text>
         </View>
       </Pressable>
     </Link>
@@ -34,7 +35,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  label: { fontWeight: "bold", fontSize: 16 },
+  item: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    gap: 6,
+  },
+  quote: {
+    fontSize: 18,
+  },
+  episode: {
+    color: "gray",
+  },
 });
 
 export default QuoteListItem;
