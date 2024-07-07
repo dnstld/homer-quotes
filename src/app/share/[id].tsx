@@ -21,6 +21,8 @@ import {
   useState,
 } from "react";
 import QuotesContext from "../../context/quotes-context";
+import HomerAvatarSvg from "../../components/HomerAvatarSvg";
+import HomerSvg from "../../components/HomerSvg";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -103,25 +105,26 @@ export default function ShareScreen() {
       >
         <View style={styles.frame}>
           <View style={styles.profileContainer}>
-            <Image
-              style={styles.avatar}
-              source={require("../../assets/images/HomerAvatar.png")}
-              resizeMode="contain"
-              onLoad={onImageLoad}
-            />
+            <HomerAvatarSvg style={styles.avatar} />
             <View style={styles.profile}>
-              <Text style={styles.name}>Homer Quotes</Text>
-              <Text style={styles.social}>@homerquotesapp</Text>
+              <Text style={styles.title}>Homer Quotes</Text>
+              <Text style={styles.subtitle}>@homerquotesapp</Text>
             </View>
           </View>
+
           <View style={styles.quoteContainer}>
             <Quote {...quote!} />
           </View>
-          <View style={styles.footer}>
-            <Text style={styles.footerName}>Homer J. Simpson</Text>
-            <Text
-              style={styles.footerText}
-            >{`Episode ${quote?.episode} Season ${quote?.season} Time ${quote?.time}`}</Text>
+
+          <View style={styles.footerContainer}>
+            <HomerSvg style={styles.image} sm={true} />
+            <View style={styles.footer}>
+              <Text style={styles.footerName}>Homer J. Simpson</Text>
+              <Text
+                style={styles.footerText}
+                numberOfLines={0}
+              >{`S${quote?.season}:E${quote?.episode} ${quote?.name}`}</Text>
+            </View>
           </View>
         </View>
       </ViewShot>
@@ -142,26 +145,43 @@ const styles = StyleSheet.create({
   profileContainer: {
     flexDirection: "row",
     padding: 16,
+    gap: 8,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+  },
+  profile: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  title: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  subtitle: {
+    color: "#fff",
+    marginTop: 2,
   },
   quoteContainer: {
     flex: 1,
     padding: 16,
   },
-  avatar: {
-    width: 48,
+  footerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    maxWidth: 200,
+    gap: 16,
   },
-  profile: {
-    flex: 1,
-    justifyContent: "center",
-    marginLeft: 8,
+  imageContainer: {
+    minHeight: 184,
   },
-  name: {
-    color: "#fff",
-    fontWeight: "bold",
+  image: {
+    minHeight: 184,
   },
   footer: {
-    padding: 16,
-    alignItems: "center",
+    paddingRight: 16,
   },
   footerName: {
     color: "white",
@@ -170,15 +190,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   footerText: {
+    fontSize: 10,
     color: "white",
-  },
-  social: {
-    color: "#fff",
-    marginTop: 2,
-  },
-  actions: {
-    flexDirection: "row",
-    padding: 16,
-    gap: 32,
   },
 });

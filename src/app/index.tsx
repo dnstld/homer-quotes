@@ -5,7 +5,6 @@ import {
   Text,
   Pressable,
   Dimensions,
-  Image,
   Animated,
   ActivityIndicator,
 } from "react-native";
@@ -16,6 +15,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Quote } from "../components/Quote";
 import QuotesContext, { QuoteProps } from "../context/quotes-context";
+import HomerSvg from "../components/HomerSvg";
 
 const windowWidth = Dimensions.get("window").width;
 const initialFadeAnim = 0;
@@ -25,8 +25,6 @@ export default function IndexScreen() {
   const { quotes, loading } = useContext(QuotesContext);
   const [currentQuote, setCurrentQuote] = useState<QuoteProps>();
   const [usedQuotes, setUsedQuotes] = useState<Set<number>>(new Set());
-  const [size, setSize] = useState({ width: 0, height: 0 });
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(initialFadeAnim)).current;
   const slideAnim = useRef(new Animated.Value(initialSlideAnim)).current;
@@ -39,10 +37,10 @@ export default function IndexScreen() {
   }, [loading, quotes]);
 
   useEffect(() => {
-    if (!loading && isImageLoaded) {
+    if (!loading) {
       animateQuote();
     }
-  }, [loading, isImageLoaded]);
+  }, [loading]);
 
   const animateQuote = () => {
     Animated.parallel([
@@ -129,26 +127,10 @@ export default function IndexScreen() {
             }}
           >
             <View style={styles.imageContainer}>
-              <Image
-                style={[
-                  styles.image,
-                  { width: size.width, height: undefined, aspectRatio: 0.92 },
-                ]}
-                source={require("../assets/images/HomerSimpson.png")}
-                onLoad={() => setIsImageLoaded(true)}
-              />
+              <HomerSvg style={styles.image} />
             </View>
           </Animated.View>
-          <View
-            style={styles.actionsContainer}
-            onLayout={(event) => {
-              const { width, height } = event.nativeEvent.layout;
-              setSize({
-                width: windowWidth - width,
-                height,
-              });
-            }}
-          >
+          <View style={styles.actionsContainer}>
             <Link
               href={{
                 pathname: "/share/[id]",
@@ -215,13 +197,24 @@ const styles = StyleSheet.create({
   },
   footer: {
     flexDirection: "row",
+    alignItems: "flex-end",
   },
   imageContainer: {
-    flex: 1,
-    justifyContent: "flex-end",
+    height: 275,
+    width: 300,
   },
   image: {
-    resizeMode: "cover",
+    position: "absolute",
+    left: 16,
+    bottom: 0,
+  },
+  actionsContainer: {
+    gap: 16,
+    alignItems: "center",
+    elevation: 3,
+    position: "absolute",
+    right: 16,
+    bottom: 16,
   },
   button: {
     alignItems: "center",
@@ -232,9 +225,9 @@ const styles = StyleSheet.create({
   },
   buttonPrimary: {
     backgroundColor: "white",
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
   },
   buttonText: {
     color: "white",
@@ -242,10 +235,5 @@ const styles = StyleSheet.create({
   buttonTextPrimary: {
     color: "#F8659F",
     elevation: 3,
-  },
-  actionsContainer: {
-    padding: 32,
-    gap: 16,
-    alignItems: "center",
   },
 });
