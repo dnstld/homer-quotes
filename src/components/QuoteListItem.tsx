@@ -1,12 +1,15 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
+import { QuoteProps } from "../context/quotes-context";
 
-interface Props {
-  id: string;
-  quote: string;
-}
-
-const QuoteListItem = ({ quote, id, episode, time, name }: Props) => {
+const QuoteListItem = ({
+  quote,
+  id,
+  episode,
+  season,
+  time,
+  name,
+}: QuoteProps) => {
   return (
     <Link
       href={{
@@ -18,7 +21,9 @@ const QuoteListItem = ({ quote, id, episode, time, name }: Props) => {
       <Pressable>
         <View style={styles.item}>
           <Text style={styles.quote}>{quote}</Text>
-          <Text style={styles.episode}>{`Episode ${episode}: ${name}`}</Text>
+          <Text
+            style={styles.episode}
+          >{`S${season}:E${episode}: ${name} (${time})`}</Text>
         </View>
       </Pressable>
     </Link>
