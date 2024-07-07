@@ -102,7 +102,7 @@ export default function IndexScreen() {
               <Text style={styles.name}>Homer J. Simpson</Text>
               <Text
                 style={styles.ep}
-              >{`Episode ${currentQuote?.episode} Season ${currentQuote?.season} Time ${currentQuote?.time}`}</Text>
+              >{`S${currentQuote?.season}:E${currentQuote?.episode} ${currentQuote?.name} (${currentQuote?.time})`}</Text>
             </View>
           </Animated.View>
         </View>

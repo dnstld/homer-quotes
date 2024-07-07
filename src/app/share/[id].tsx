@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-  Image,
   Button,
 } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
@@ -16,6 +15,7 @@ import {
   SetStateAction,
   useCallback,
   useContext,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -35,10 +35,6 @@ export default function ShareScreen() {
 
   const viewShot = useRef(null);
   const quote = quotes.find((q) => q.id === id);
-
-  const onImageLoad = useCallback(() => {
-    onCapture();
-  }, []);
 
   const onCapture = useCallback(() => {
     if (viewShot.current) {
@@ -90,6 +86,10 @@ export default function ShareScreen() {
       headerRight: () => <Button title="Share" onPress={save} />,
     });
   }, [navigation, save]);
+
+  useEffect(() => {
+    onCapture();
+  }, []);
 
   return (
     <View style={styles.container}>
