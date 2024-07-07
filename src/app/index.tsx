@@ -6,7 +6,6 @@ import {
   Pressable,
   Dimensions,
   Animated,
-  ActivityIndicator,
 } from "react-native";
 
 import { Link } from "expo-router";
@@ -22,7 +21,7 @@ const initialFadeAnim = 0;
 const initialSlideAnim = 30;
 
 export default function IndexScreen() {
-  const { quotes, loading } = useContext(QuotesContext);
+  const { quotes } = useContext(QuotesContext);
   const [currentQuote, setCurrentQuote] = useState<QuoteProps>();
   const [usedQuotes, setUsedQuotes] = useState<Set<number>>(new Set());
 
@@ -31,32 +30,30 @@ export default function IndexScreen() {
   const imageSlideAnim = useRef(new Animated.Value(-windowWidth)).current;
 
   useEffect(() => {
-    if (!loading && quotes.length > 0) {
+    if (quotes.length > 0) {
       showRandomQuote();
-    }
-  }, [loading, quotes]);
-
-  useEffect(() => {
-    if (!loading) {
       animateQuote();
     }
-  }, [loading]);
+  }, [quotes]);
 
   const animateQuote = () => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 500,
+        duration: 300,
+        delay: 100,
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
         toValue: 0,
         duration: 300,
+        delay: 100,
         useNativeDriver: true,
       }),
       Animated.timing(imageSlideAnim, {
         toValue: 0,
-        duration: 500,
+        duration: 300,
+        delay: 300,
         useNativeDriver: true,
       }),
     ]).start();
@@ -93,32 +90,21 @@ export default function IndexScreen() {
         <StatusBar style="auto" />
 
         <View style={styles.quoteContainer}>
-          {loading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-              }}
-            >
-              <ActivityIndicator size="large" color="white" />
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
+              flex: 1,
+            }}
+          >
+            <Quote {...currentQuote!} />
+            <View style={styles.episodeContainer}>
+              <Text style={styles.name}>Homer J. Simpson</Text>
+              <Text
+                style={styles.ep}
+              >{`Episode ${currentQuote?.episode} Season ${currentQuote?.season} Time ${currentQuote?.time}`}</Text>
             </View>
-          ) : (
-            <Animated.View
-              style={{
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-                flex: 1,
-              }}
-            >
-              <Quote {...currentQuote!} />
-              <View style={styles.episodeContainer}>
-                <Text style={styles.name}>Homer J. Simpson</Text>
-                <Text
-                  style={styles.ep}
-                >{`Episode ${currentQuote?.episode} Season ${currentQuote?.season} Time ${currentQuote?.time}`}</Text>
-              </View>
-            </Animated.View>
-          )}
+          </Animated.View>
         </View>
         <View style={styles.footer}>
           <Animated.View

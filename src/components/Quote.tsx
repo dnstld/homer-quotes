@@ -1,19 +1,16 @@
 import { Acme_400Regular, useFonts } from "@expo-google-fonts/acme";
 import React from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { QuoteProps } from "../context/quotes-context";
 
 export const Quote = ({ quote }: QuoteProps) => {
-  const [fontsLoaded, fontError] = useFonts({
+  const [loaded] = useFonts({
     Acme_400Regular,
   });
   return (
     <View style={styles.quoteContainer}>
-      {!fontsLoaded && !fontError ? (
-        <ActivityIndicator size="large" color="#fff" />
-      ) : (
-        // @ts-ignore
+      {loaded && (
         <AutoSizeText
           mode={ResizeTextMode.group}
           adjustsFontSizeToFit
@@ -32,7 +29,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   quote: {
-    color: "#fff",
+    color: "white",
     textAlign: "center",
     fontFamily: "Acme_400Regular",
   },

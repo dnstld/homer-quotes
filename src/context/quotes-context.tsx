@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect, ReactNode } from "react";
+import * as SplashScreen from "expo-splash-screen";
 
 export type QuoteProps = {
   id: string;
@@ -13,38 +14,40 @@ export type QuoteProps = {
 
 interface QuotesContextProps {
   quotes: QuoteProps[];
-  loading: boolean;
 }
 
 const QuotesContext = createContext<QuotesContextProps>({
   quotes: [],
-  loading: true,
 });
 
 export const QuotesProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [quotes, setQuotes] = useState<QuoteProps[]>([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchQuotes = async () => {
-      setLoading(true);
       try {
+        SplashScreen.preventAutoHideAsync();
         const response = await fetch("https://api.sharedtattoo.com");
         const { data } = await response.json();
         setQuotes(data);
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        SplashScreen.hideAsync();
       }
     };
+
     fetchQuotes();
+
+    return () => {
+      SplashScreen.hideAsync();
+    };
   }, []);
 
   return (
-    <QuotesContext.Provider value={{ quotes, loading }}>
+    <QuotesContext.Provider value={{ quotes }}>
       {children}
     </QuotesContext.Provider>
   );

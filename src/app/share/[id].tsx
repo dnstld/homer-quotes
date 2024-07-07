@@ -29,7 +29,7 @@ const windowWidth = Dimensions.get("window").width;
 export default function ShareScreen() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
-  const { quotes, loading } = useContext(QuotesContext);
+  const { quotes } = useContext(QuotesContext);
 
   const [URI, setURI] = useState("");
 
@@ -93,8 +93,6 @@ export default function ShareScreen() {
 
   return (
     <View style={styles.container}>
-      {loading && <Text>Loading...</Text>}
-
       <ViewShot
         ref={viewShot}
         options={{
