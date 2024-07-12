@@ -1,63 +1,85 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  Dimensions,
-  Animated,
-} from "react-native";
+import { StyleSheet, View, Text, Pressable, Animated } from "react-native";
 
 import { Link } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useContext, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Fontisto from "@expo/vector-icons/Fontisto";
 import { Quote } from "../components/Quote";
 import QuotesContext, { QuoteProps } from "../context/quotes-context";
 import HomerSvg from "../components/HomerSvg";
 
-const windowWidth = Dimensions.get("window").width;
+const MAGIC_NUMBER = 32;
 const initialFadeAnim = 0;
 const initialSlideAnim = 30;
+
+const useQuoteAnimation = () => {
+  const fadeAnim = useRef(new Animated.Value(initialFadeAnim)).current;
+  const slideAnim = useRef(new Animated.Value(initialSlideAnim)).current;
+
+  const quoteAnimation = () => {
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.spring(slideAnim, {
+        toValue: 0,
+        friction: 5,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  return {
+    fadeAnim,
+    slideAnim,
+    quoteAnimation,
+  };
+};
+
+const useButtonAnimation = () => {
+  const animation = useRef(new Animated.Value(0)).current;
+  const inputRange = [0, 1];
+  const outputRange = [1, 0.8];
+  const scale = animation.interpolate({ inputRange, outputRange });
+
+  const onPressIn = () => {
+    Animated.spring(animation, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+  const onPressOut = () => {
+    Animated.spring(animation, {
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return {
+    scale,
+    onPressIn,
+    onPressOut,
+  };
+};
 
 export default function IndexScreen() {
   const { quotes } = useContext(QuotesContext);
   const [currentQuote, setCurrentQuote] = useState<QuoteProps>();
   const [usedQuotes, setUsedQuotes] = useState<Set<number>>(new Set());
 
-  const fadeAnim = useRef(new Animated.Value(initialFadeAnim)).current;
-  const slideAnim = useRef(new Animated.Value(initialSlideAnim)).current;
-  const imageSlideAnim = useRef(new Animated.Value(-windowWidth)).current;
+  const { fadeAnim, slideAnim, quoteAnimation } = useQuoteAnimation();
+  const { scale, onPressIn, onPressOut } = useButtonAnimation();
 
   useEffect(() => {
     if (quotes.length > 0) {
       showRandomQuote();
-      animateQuote();
+      quoteAnimation();
     }
   }, [quotes]);
-
-  const animateQuote = () => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        delay: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 300,
-        delay: 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(imageSlideAnim, {
-        toValue: 0,
-        duration: 300,
-        delay: 300,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  };
 
   const getRandomIndex = () => {
     return Math.floor(Math.random() * quotes.length + 1);
@@ -81,7 +103,7 @@ export default function IndexScreen() {
     // Reset animation values
     fadeAnim.setValue(initialFadeAnim);
     slideAnim.setValue(initialSlideAnim);
-    animateQuote();
+    quoteAnimation();
   };
 
   return (
@@ -94,28 +116,48 @@ export default function IndexScreen() {
             style={{
               opacity: fadeAnim,
               transform: [{ translateY: slideAnim }],
+            }}
+          >
+            <Fontisto
+              name="quote-a-right"
+              size={MAGIC_NUMBER}
+              color="white"
+              style={{ position: "absolute", top: -MAGIC_NUMBER, left: 0 }}
+            />
+          </Animated.View>
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
               flex: 1,
             }}
           >
             <Quote {...currentQuote!} />
-            <View style={styles.episodeContainer}>
-              <Text style={styles.name}>Homer J. Simpson</Text>
-              <Text
-                style={styles.ep}
-              >{`S${currentQuote?.season}:E${currentQuote?.episode} ${currentQuote?.name} (${currentQuote?.time})`}</Text>
-            </View>
           </Animated.View>
-        </View>
-        <View style={styles.footer}>
           <Animated.View
             style={{
-              transform: [{ translateX: imageSlideAnim }],
+              opacity: fadeAnim,
+              transform: [{ translateY: slideAnim }],
             }}
           >
-            <View style={styles.imageContainer}>
-              <HomerSvg style={styles.image} />
-            </View>
+            <Fontisto
+              name="quote-a-left"
+              size={MAGIC_NUMBER}
+              color="white"
+              style={{ position: "absolute", bottom: -MAGIC_NUMBER, right: 0 }}
+            />
           </Animated.View>
+        </View>
+        <View style={styles.episodeContainer}>
+          <Text style={styles.name}>Homer J. Simpson</Text>
+          <Text
+            style={styles.ep}
+          >{`S${currentQuote?.season}:E${currentQuote?.episode} ${currentQuote?.name} (${currentQuote?.time})`}</Text>
+        </View>
+        <View style={styles.footer}>
+          <View style={styles.imageContainer}>
+            <HomerSvg style={styles.image} />
+          </View>
           <View style={styles.actionsContainer}>
             <Link
               href={{
@@ -130,14 +172,24 @@ export default function IndexScreen() {
                 </Text>
               </Pressable>
             </Link>
-            <Pressable
-              style={[styles.button, styles.buttonPrimary]}
-              onPress={showRandomQuote}
+            <Animated.View
+              style={[
+                styles.button,
+                styles.buttonPrimary,
+                { transform: [{ scale }] },
+              ]}
             >
-              <Text style={[styles.buttonText, styles.buttonTextPrimary]}>
-                <Ionicons name="refresh-outline" size={48} />
-              </Text>
-            </Pressable>
+              <Pressable
+                onPressIn={onPressIn}
+                onPressOut={onPressOut}
+                onPress={showRandomQuote}
+                style={styles.button}
+              >
+                <Text style={[styles.buttonText, styles.buttonTextPrimary]}>
+                  <Ionicons name="refresh-outline" size={48} />
+                </Text>
+              </Pressable>
+            </Animated.View>
             <Link href={"list"} asChild>
               <Pressable style={styles.button}>
                 <Text style={styles.buttonText}>
@@ -166,7 +218,8 @@ const styles = StyleSheet.create({
   },
   quoteContainer: {
     flex: 1,
-    padding: 32,
+    paddingVertical: MAGIC_NUMBER * 2,
+    paddingHorizontal: MAGIC_NUMBER,
   },
   episodeContainer: {
     padding: 16,
