@@ -2,14 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Link } from "expo-router";
 import { QuoteProps } from "../context/quotes-context";
 
-const QuoteListItem = ({
-  quote,
-  id,
-  episode,
-  season,
-  time,
-  name,
-}: QuoteProps) => {
+const QuoteListItem = ({ quote, id, episode, time }: QuoteProps) => {
   return (
     <Link
       href={{
@@ -18,12 +11,13 @@ const QuoteListItem = ({
       }}
       asChild
     >
-      <Pressable>
-        <View style={styles.item}>
-          <Text style={styles.quote}>{quote}</Text>
-          <Text
-            style={styles.episode}
-          >{`S${season}:E${episode}: ${name} (${time})`}</Text>
+      <Pressable style={styles.pressable}>
+        <Text style={styles.info}>{`Ep. ${("0" + episode).slice(-2)}:`}</Text>
+        <View style={styles.quoteContainer}>
+          <Text style={styles.quote}>
+            {quote}
+            <Text style={styles.time}>{` (${time})`}</Text>
+          </Text>
         </View>
       </Pressable>
     </Link>
@@ -31,24 +25,25 @@ const QuoteListItem = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "gainsboro",
-    padding: 16,
-    gap: 4,
-    borderRadius: 8,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  item: {
+  pressable: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    gap: 6,
+    gap: 8,
+    flexDirection: "row",
+  },
+  quoteContainer: {
+    flex: 1,
   },
   quote: {
-    fontSize: 18,
+    fontSize: 16,
+    color: "black",
   },
-  episode: {
+  info: {
+    color: "gray",
+    marginTop: 2,
+  },
+  time: {
+    fontSize: 10,
     color: "gray",
   },
 });

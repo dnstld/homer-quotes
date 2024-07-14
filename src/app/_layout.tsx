@@ -6,7 +6,12 @@ const RootLayout = () => {
   const router = useRouter();
   return (
     <QuotesProvider>
-      <Stack screenOptions={{ headerTintColor: "white" }}>
+      <Stack
+        screenOptions={{
+          headerTintColor: "white",
+          headerStyle: { backgroundColor: "#00AAFF" },
+        }}
+      >
         <Stack.Screen
           name="index"
           options={{
@@ -17,14 +22,13 @@ const RootLayout = () => {
         <Stack.Screen
           name="list/index"
           options={{
-            headerTitle: "All Quotes",
-            headerStyle: { backgroundColor: "#00AAFF" },
+            headerTitle: "Seasons",
           }}
         />
         <Stack.Screen
           name="share/[id]"
           options={{
-            headerTitle: "",
+            headerStyle: { backgroundColor: "white" },
             headerLeft: () => (
               <Button title="Close" onPress={() => router.back()} />
             ),
@@ -35,7 +39,6 @@ const RootLayout = () => {
           name="settings/index"
           options={{
             headerTitle: "Settings",
-            headerStyle: { backgroundColor: "#00AAFF" },
           }}
         />
       </Stack>

@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: MAGIC_NUMBER,
   },
   episodeContainer: {
-    padding: 16,
+    padding: 32,
     alignItems: "center",
   },
   name: {
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   },
   image: {
     position: "absolute",
-    left: 16,
+    left: "-25%",
     bottom: 0,
   },
   actionsContainer: {
@@ -252,8 +252,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     elevation: 3,
     position: "absolute",
-    right: 16,
-    bottom: 16,
+    right: 32,
+    bottom: 32,
   },
   button: {
     alignItems: "center",

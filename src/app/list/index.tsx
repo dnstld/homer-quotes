@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, SectionList } from "react-native";
+import { StyleSheet, ScrollView, Text, SectionList } from "react-native";
 
 import QuoteListItem from "../../components/QuoteListItem";
 import QuotesContext, { QuoteProps } from "../../context/quotes-context";
-import { useContext } from "react";
+import React, { useContext } from "react";
 
 export default function ListScreen() {
   const { quotes } = useContext(QuotesContext);
@@ -39,43 +39,40 @@ export default function ListScreen() {
   );
 
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-
-      <SectionList
-        sections={sections.map((seasonSection) => ({
-          ...seasonSection,
-          data: seasonSection.data.map((episodeSection) => ({
-            ...episodeSection,
-            key: `${seasonSection.season}-${episodeSection.episode}`,
-            data: episodeSection.data,
-          })),
-        }))}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.sectionList}
-        renderItem={({ item }) => <QuoteListItem {...item} />}
-        renderSectionHeader={({ section: { season } }) => (
-          <Text style={styles.sectionListHeader}>{`Season ${season}`}</Text>
-        )}
-      />
-    </View>
+    <SectionList
+      sections={sections.map((seasonSection) => ({
+        ...seasonSection,
+        data: seasonSection.data.map((episodeSection) => ({
+          ...episodeSection,
+          key: `${seasonSection.season}-${episodeSection.episode}`,
+          data: episodeSection.data,
+        })),
+      }))}
+      keyExtractor={(item) => item.id}
+      contentContainerStyle={styles.sectionList}
+      renderItem={({ item }) => <QuoteListItem {...item} />}
+      renderSectionHeader={({ section: { title, season } }) => (
+        <Text style={styles.sectionListHeader}>{`${season}. ${title}`}</Text>
+      )}
+      style={styles.container}
+    />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   sectionList: {
     paddingBottom: 50,
+    flex: 1,
   },
   sectionListHeader: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
-    backgroundColor: "#F8659F",
-    color: "white",
+    backgroundColor: "white",
+    color: "black",
   },
 });
