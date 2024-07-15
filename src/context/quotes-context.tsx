@@ -35,7 +35,9 @@ export const QuotesProvider: React.FC<{ children: ReactNode }> = ({
       } catch (error) {
         console.error(error);
       } finally {
-        SplashScreen.hideAsync();
+        setTimeout(() => {
+          SplashScreen.hideAsync();
+        }, 3000);
       }
     };
 
