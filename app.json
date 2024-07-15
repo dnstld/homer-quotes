@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "HomerQuotes",
+    "name": "Homer Quotes",
     "slug": "HomerQuotes",
     "scheme": "homerQuotesScheme",
     "version": "1.0.0",
@@ -26,9 +26,7 @@
       "favicon": "./assets/favicon.ico",
       "bundler": "metro"
     },
-    "plugins": [
-      "expo-router"
-    ],
+    "plugins": ["expo-router"],
     "extra": {
       "router": {
         "origin": false
