@@ -22,7 +22,7 @@ const RootLayout = () => {
         <Stack.Screen
           name="list/index"
           options={{
-            headerTitle: "Seasons",
+            headerTitle: "The Simpsons",
           }}
         />
         <Stack.Screen

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -126,30 +126,26 @@ export default function SettingsScreen() {
               </View>
             </View>
             <Text>
-              Welcome to the Homer Simpsons Quotes app, your go-to source for
-              daily laughter and wisdom from everyone's favorite animated dad,
-              Homer Simpson! As lifelong "The Simpsons" fans, we've poured our
-              love for the show into this app to bring you the funniest and most
-              memorable quotes from Homer J. Simpson.
+              Homer Quotes App, your go-to source for daily laughter and wisdom
+              from everyone's favorite animated dad, Homer Simpson! As lifelong
+              "The Simpsons" fans, we've poured our love for the show into this
+              app to bring you the funniest and most memorable quotes from Homer
+              J. Simpson.
             </Text>
           </View>
 
           <View style={styles.dashboard}>
             <View style={styles.dashboardItem}>
-              <Text style={styles.dashboardData}>24</Text>
-              <Text style={styles.dashboardName}>series</Text>
+              <Text style={styles.dashboardData}>35</Text>
+              <Text style={styles.dashboardName}>seasons</Text>
             </View>
             <View style={styles.dashboardItem}>
-              <Text style={styles.dashboardData}>1254</Text>
+              <Text style={styles.dashboardData}>768</Text>
               <Text style={styles.dashboardName}>episodes</Text>
             </View>
             <View style={styles.dashboardItem}>
-              <Text style={styles.dashboardData}>850</Text>
+              <Text style={styles.dashboardData}>1765</Text>
               <Text style={styles.dashboardName}>quotes</Text>
-            </View>
-            <View style={styles.dashboardItem}>
-              <Text style={styles.dashboardData}>267</Text>
-              <Text style={styles.dashboardName}>hours</Text>
             </View>
           </View>
         </View>

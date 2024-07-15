@@ -1,8 +1,7 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, ScrollView, Text, SectionList } from "react-native";
+import { StyleSheet, Text, SectionList, View } from "react-native";
 
 import QuoteListItem from "../../components/QuoteListItem";
-import QuotesContext, { QuoteProps } from "../../context/quotes-context";
+import QuotesContext from "../../context/quotes-context";
 import React, { useContext } from "react";
 
 export default function ListScreen() {
@@ -54,6 +53,22 @@ export default function ListScreen() {
       renderSectionHeader={({ section: { title, season } }) => (
         <Text style={styles.sectionListHeader}>{`${season}. ${title}`}</Text>
       )}
+      ListHeaderComponent={() => (
+        <View style={styles.dashboard}>
+          <View style={styles.dashboardItem}>
+            <Text style={styles.dashboardData}>35</Text>
+            <Text style={styles.dashboardName}>seasons</Text>
+          </View>
+          <View style={styles.dashboardItem}>
+            <Text style={styles.dashboardData}>768</Text>
+            <Text style={styles.dashboardName}>episodes</Text>
+          </View>
+          <View style={styles.dashboardItem}>
+            <Text style={styles.dashboardData}>1765</Text>
+            <Text style={styles.dashboardName}>quotes</Text>
+          </View>
+        </View>
+      )}
       style={styles.container}
     />
   );
@@ -72,7 +87,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 16,
     fontWeight: "bold",
+    backgroundColor: "#00aaff",
+    color: "yellow",
+    marginBottom: 16,
+  },
+  dashboard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     backgroundColor: "white",
-    color: "black",
+  },
+  dashboardItem: {
+    alignItems: "center",
+    padding: 16,
+    flex: 1,
+  },
+  dashboardData: {
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  dashboardName: {
+    fontSize: 12,
+    color: "#767577",
   },
 });

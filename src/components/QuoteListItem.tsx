@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { Link } from "expo-router";
 import { QuoteProps } from "../context/quotes-context";
 
@@ -11,7 +17,7 @@ const QuoteListItem = ({ quote, id, episode, time }: QuoteProps) => {
       }}
       asChild
     >
-      <Pressable style={styles.pressable}>
+      <TouchableOpacity style={styles.pressable}>
         <Text style={styles.info}>{`Ep. ${("0" + episode).slice(-2)}:`}</Text>
         <View style={styles.quoteContainer}>
           <Text style={styles.quote}>
@@ -19,7 +25,7 @@ const QuoteListItem = ({ quote, id, episode, time }: QuoteProps) => {
             <Text style={styles.time}>{` (${time})`}</Text>
           </Text>
         </View>
-      </Pressable>
+      </TouchableOpacity>
     </Link>
   );
 };
