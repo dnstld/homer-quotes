@@ -247,12 +247,12 @@ export default function IndexScreen() {
         </View>
         <View style={styles.episodeContainer}>
           <Text style={styles.name}>Homer J. Simpson</Text>
-          <Text style={styles.ep} selectable={true} selectionColor="orange">
+          {/* <Text style={styles.ep} selectable={true} selectionColor="orange">
             {expoPushToken}
-          </Text>
-          {/* <Text
+          </Text> */}
+          <Text
             style={styles.ep}
-          >{`S${currentQuote?.season}:E${currentQuote?.episode} ${currentQuote?.name} (${currentQuote?.time})`}</Text> */}
+          >{`S${currentQuote?.season}:E${currentQuote?.episode} ${currentQuote?.name} (${currentQuote?.time})`}</Text>
         </View>
         <View style={styles.footer}>
           <View style={styles.imageContainer}>

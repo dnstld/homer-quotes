@@ -6,17 +6,18 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-  Button,
+  TouchableOpacity,
 } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import ViewShot from "react-native-view-shot";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import * as Clipboard from "expo-clipboard";
 import { Quote } from "../../components/Quote";
 import {
   SetStateAction,
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -27,14 +28,21 @@ import HomerSvg from "../../components/HomerSvg";
 const windowWidth = Dimensions.get("window").width;
 
 export default function ShareScreen() {
-  const navigation = useNavigation();
   const { id } = useLocalSearchParams();
   const { quotes } = useContext(QuotesContext);
+  const [copiedQuote, setCopiedQuote] = useState(false);
 
   const [URI, setURI] = useState("");
 
   const viewShot = useRef(null);
   const quote = quotes.find((q) => q.id === id);
+
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(
+      `"${quote?.quote}" - Homer J. Simpson S${quote?.season}:E${quote?.episode} ${quote?.name} #homerquotesapp`
+    );
+    setCopiedQuote(true);
+  };
 
   const onCapture = useCallback(() => {
     if (viewShot.current) {
@@ -81,12 +89,6 @@ export default function ShareScreen() {
     }
   };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => <Button title="Share" onPress={save} />,
-    });
-  }, [navigation, save]);
-
   useEffect(() => {
     onCapture();
   }, []);
@@ -126,6 +128,30 @@ export default function ShareScreen() {
           </View>
         </View>
       </ViewShot>
+      <View style={styles.actionsContainer}>
+        <TouchableOpacity onPress={copyToClipboard}>
+          <View style={styles.copyButton}>
+            {copiedQuote ? (
+              <>
+                <Ionicons name="checkmark" size={24} />
+                <Text>Copied!</Text>
+              </>
+            ) : (
+              <>
+                <Ionicons name="copy-outline" size={24} />
+                <Text>Copy</Text>
+              </>
+            )}
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={save}>
+          <View style={styles.shareButton}>
+            <Ionicons name="share-outline" size={24} color="white" />
+            <Text style={styles.shareButtonText}>Share</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -190,5 +216,34 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 10,
     color: "white",
+  },
+  actionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 16,
+    gap: 16,
+  },
+  copyButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#00AAFF",
+    borderRadius: 8,
+  },
+  shareButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    padding: 16,
+    backgroundColor: "#F8659F",
+    borderRadius: 8,
+    flexGrow: 1,
+  },
+  shareButtonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

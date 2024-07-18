@@ -29,7 +29,7 @@ const RootLayout = () => {
           name="share/[id]"
           options={{
             headerStyle: { backgroundColor: "white" },
-            headerLeft: () => (
+            headerRight: () => (
               <Button title="Close" onPress={() => router.back()} />
             ),
             presentation: "modal",
