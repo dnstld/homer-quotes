@@ -1,18 +1,28 @@
 {
   "cli": {
-    "version": ">= 3.13.3"
+    "version": ">= 3.13.3",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
-      "extends": "production",
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "development"
+      },
+      "channel": "development"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "preview"
+      },
+      "channel": "preview"
     },
     "production": {
-      "node": "18.18.0"
+      "autoIncrement": true,
+      "node": "18.18.0",
+      "channel": "production"
     }
   },
   "submit": {
