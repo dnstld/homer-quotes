@@ -66,7 +66,7 @@ export default function SettingsScreen() {
         <View>
           <Text style={styles.title}>Controls</Text>
 
-          {granted && (
+          {!granted && (
             <TouchableOpacity onPress={toggleSwitch}>
               <View style={styles.notificationWarning}>
                 <Ionicons name="warning-outline" size={48} color={"white"} />

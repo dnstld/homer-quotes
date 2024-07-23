@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "959727151739",
+    "project_id": "homerquotes-d01a3",
+    "storage_bucket": "homerquotes-d01a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959727151739:android:b40f5f0b7672ff72d810de",
+        "android_client_info": {
+          "package_name": "com.dnstld.HomerQuotes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyUTYAqiTcaVK1x6rwhWMCvwVzmTOnkXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959727151739:android:48f8be9b81638a20d810de",
+        "android_client_info": {
+          "package_name": "com.dnstld.HomerQuotes.dev"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCyUTYAqiTcaVK1x6rwhWMCvwVzmTOnkXs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,13 +1,8 @@
 const IS_DEV = process.env.APP_VARIANT === "development";
-const IS_PREVIEW = process.env.APP_VARIANT === "preview";
 
 const getUniqueIdentifier = () => {
   if (IS_DEV) {
     return "com.dnstld.HomerQuotes.dev";
-  }
-
-  if (IS_PREVIEW) {
-    return "com.dnstld.HomerQuotes.preview";
   }
 
   return "com.dnstld.HomerQuotes";
@@ -15,14 +10,18 @@ const getUniqueIdentifier = () => {
 
 const getAppName = () => {
   if (IS_DEV) {
-    return "HomerQuotes (Dev)";
+    return "Homer Quotes (Dev)";
   }
 
-  if (IS_PREVIEW) {
-    return "HomerQuotes (Preview)";
+  return "Homer Quotes";
+};
+
+const getGoogleServices = () => {
+  if (IS_DEV) {
+    return "./android/app/google-services-dev.json";
   }
 
-  return "HomerQuotes";
+  return "./android/app/google-services.json";
 };
 
 export default {
@@ -60,8 +59,9 @@ export default {
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
     },
-    package: getUniqueIdentifier(),
+    package: "com.dnstld.HomerQuotes",
     versionCode: "1",
+    googleServicesFile: getGoogleServices(),
   },
   web: {
     favicon: "./assets/favicon.ico",
