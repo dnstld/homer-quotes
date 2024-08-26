@@ -55,7 +55,7 @@ export default function ShareScreen() {
 
   const imageOptions = {
     dialogTitle: "HomerQuotesApp",
-    mimeType: "image/jpeg",
+    mimeType: "image/png",
   };
 
   const save = async () => {
