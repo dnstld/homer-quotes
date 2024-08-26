@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
-
-import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { isDevice } from "expo-device";
 
 export interface PushNotificationState {
   notification?: Notifications.Notification;
   expoPushToken?: Notifications.ExpoPushToken;
+  registerForPushNotifications: () => Promise<
+    Notifications.ExpoPushToken | undefined
+  >;
 }
 
 export const usePushNotifications = (): PushNotificationState => {
@@ -29,10 +31,9 @@ export const usePushNotifications = (): PushNotificationState => {
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
 
-  const registerForPushNotificationsAsync = async () => {
+  const registerForPushNotifications = async () => {
     let token;
-
-    if (Device.isDevice) {
+    if (isDevice) {
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
@@ -41,16 +42,18 @@ export const usePushNotifications = (): PushNotificationState => {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
+
       if (finalStatus !== "granted") {
-        throw new Error(
-          "Permission not granted to get push token for push notification!"
-        );
+        console.log("* Permission not granted!");
+        return;
       }
+
       token = await Notifications.getExpoPushTokenAsync({
         projectId:
           Constants?.expoConfig?.extra?.eas?.projectId ??
           Constants?.easConfig?.projectId,
       });
+      setExpoPushToken(token);
 
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
@@ -68,10 +71,6 @@ export const usePushNotifications = (): PushNotificationState => {
   };
 
   useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then((token) => setExpoPushToken(token))
-      .catch((error) => console.error(error));
-
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) =>
         setNotification(notification)
@@ -93,5 +92,6 @@ export const usePushNotifications = (): PushNotificationState => {
   return {
     expoPushToken,
     notification,
+    registerForPushNotifications,
   };
 };

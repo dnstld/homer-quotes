@@ -8,9 +8,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Fontisto from "@expo/vector-icons/Fontisto";
 
 import { Quote } from "../components/Quote";
+import { Homer } from "../components/Homer";
 import QuotesContext, { QuoteProps } from "../context/quotes-context";
-import HomerSvg from "../components/HomerSvg";
-import { usePushNotifications } from "../hooks/Notifications";
 
 const MAGIC_NUMBER = 32;
 const initialFadeAnim = 0;
@@ -75,11 +74,6 @@ export default function IndexScreen() {
 
   const { fadeAnim, slideAnim, quoteAnimation } = useQuoteAnimation();
   const { scale, onPressIn, onPressOut } = useButtonAnimation();
-  const { expoPushToken, notification } = usePushNotifications();
-  const data = JSON.stringify(notification, undefined, 2);
-
-  console.log(data);
-  console.log(expoPushToken?.data ?? "");
 
   useEffect(() => {
     if (quotes.length > 0) {
@@ -157,17 +151,12 @@ export default function IndexScreen() {
         </View>
         <View style={styles.episodeContainer}>
           <Text style={styles.name}>Homer J. Simpson</Text>
-          {/* <Text style={styles.ep} selectable={true} selectionColor="orange">
-            {expoPushToken}
-          </Text> */}
           <Text
             style={styles.ep}
           >{`S${currentQuote?.season}:E${currentQuote?.episode} ${currentQuote?.name} (${currentQuote?.time})`}</Text>
         </View>
         <View style={styles.footer}>
-          <View style={styles.imageContainer}>
-            <HomerSvg style={styles.image} />
-          </View>
+          <Homer />
           <View style={styles.actionsContainer}>
             <Link
               href={{
@@ -249,8 +238,8 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   imageContainer: {
-    height: 275,
-    width: 300,
+    height: 200,
+    width: 233,
   },
   image: {
     position: "absolute",

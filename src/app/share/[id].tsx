@@ -13,6 +13,7 @@ import ViewShot from "react-native-view-shot";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Clipboard from "expo-clipboard";
 import { Quote } from "../../components/Quote";
+import { Homer } from "../../components/Homer";
 import {
   SetStateAction,
   useCallback,
@@ -23,7 +24,6 @@ import {
 } from "react";
 import QuotesContext from "../../context/quotes-context";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
-import HomerSvg from "../../components/HomerSvg";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -39,7 +39,7 @@ export default function ShareScreen() {
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(
-      `"${quote?.quote}" - Homer J. Simpson S${quote?.season}:E${quote?.episode} ${quote?.name} #homerquotesapp`
+      `"${quote?.quote}" - Homer J. Simpson S${quote?.season}:E${quote?.episode} ${quote?.name}`
     );
     setCopiedQuote(true);
   };
@@ -117,7 +117,7 @@ export default function ShareScreen() {
           </View>
 
           <View style={styles.footerContainer}>
-            <HomerSvg style={styles.image} sm={true} />
+            <Homer share />
             <View style={styles.footer}>
               <Text style={styles.footerName}>Homer J. Simpson</Text>
               <Text

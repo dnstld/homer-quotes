@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -10,18 +9,24 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { usePermissions } from "../../hooks/Permissions";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNotificationSettings } from "../../hooks/NotificationSettings";
+import { usePushNotifications } from "../../hooks/Notifications";
+import { usePermissions } from "../../hooks/Permissions";
 
 export default function SettingsScreen() {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const [granted, tooglePermission] = usePermissions("notifications");
+  const [{ authorized }, open] = useNotificationSettings();
   const { bottom } = useSafeAreaInsets();
+  const { registerForPushNotifications } = usePushNotifications();
+  const [granted] = usePermissions("notifications");
 
-  const toggleSwitch = () => {
-    setIsEnabled((previousState) => !previousState);
-    tooglePermission();
+  const handleSettings = async () => {
+    if (!granted && authorized === undefined) {
+      registerForPushNotifications();
+    } else {
+      open();
+    }
   };
 
   const openInstagram = async () => {
@@ -66,8 +71,8 @@ export default function SettingsScreen() {
         <View>
           <Text style={styles.title}>Controls</Text>
 
-          {!granted && (
-            <TouchableOpacity onPress={toggleSwitch}>
+          {!authorized && (
+            <TouchableOpacity onPress={handleSettings}>
               <View style={styles.notificationWarning}>
                 <Ionicons name="warning-outline" size={48} color={"white"} />
                 <View style={styles.notificationWarningContent}>
@@ -88,7 +93,7 @@ export default function SettingsScreen() {
                 <Text style={styles.controlTitle}>Push notifications</Text>
                 <Text>Notifications designed to bring joy to your day</Text>
               </View>
-              <Switch onValueChange={toggleSwitch} value={isEnabled} />
+              <Switch onValueChange={handleSettings} value={authorized} />
             </View>
           </View>
         </View>
