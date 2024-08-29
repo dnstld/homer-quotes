@@ -2,14 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
-import { isDevice } from "expo-device";
+import { isDevice, modelName, osName, osVersion } from "expo-device";
+
+import { db } from "../../firebaseConfig";
+import { ref, set } from "firebase/database";
 
 export interface PushNotificationState {
   notification?: Notifications.Notification;
-  expoPushToken?: Notifications.ExpoPushToken;
-  registerForPushNotifications: () => Promise<
-    Notifications.ExpoPushToken | undefined
-  >;
+  expoPushToken?: string;
+  registerForPushNotifications: () => void;
+  unregisterForPushNotifications: (token: string) => Promise<void>;
 }
 
 export const usePushNotifications = (): PushNotificationState => {
@@ -21,15 +23,29 @@ export const usePushNotifications = (): PushNotificationState => {
     }),
   });
 
-  const [expoPushToken, setExpoPushToken] = useState<
-    Notifications.ExpoPushToken | undefined
-  >();
+  const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState<
     Notifications.Notification | undefined
   >();
 
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
+
+  const saveDeviceToken = async (token: string) => {
+    setExpoPushToken(token);
+    set(ref(db, "tokens/" + token.replace(/[^\w\s]/gi, "")), {
+      token: token,
+      createdAt: new Date().toISOString(),
+      modelName,
+      osName,
+      osVersion,
+      env: Constants?.expoConfig?.extra?.env ?? Constants?.appOwnership,
+    });
+  };
+
+  const unregisterForPushNotifications = async (token: string) => {
+    set(ref(db, "tokens/" + token.replace(/[^\w\s]/gi, "")), null);
+  };
 
   const registerForPushNotifications = async () => {
     let token;
@@ -53,7 +69,8 @@ export const usePushNotifications = (): PushNotificationState => {
           Constants?.expoConfig?.extra?.eas?.projectId ??
           Constants?.easConfig?.projectId,
       });
-      setExpoPushToken(token);
+
+      saveDeviceToken(token.data);
 
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
@@ -93,5 +110,6 @@ export const usePushNotifications = (): PushNotificationState => {
     expoPushToken,
     notification,
     registerForPushNotifications,
+    unregisterForPushNotifications,
   };
 };

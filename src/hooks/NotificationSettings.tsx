@@ -3,6 +3,7 @@ import { startActivityAsync, ActivityAction } from "expo-intent-launcher";
 import { AppState, Linking, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import { usePermissions } from "./Permissions";
+import { usePushNotifications } from "./Notifications";
 
 type NotificationSettings = Notifications.NotificationPermissionsStatus;
 
@@ -14,6 +15,11 @@ type UseNotificationSettingsReturn = [
 
 export const useNotificationSettings = (): UseNotificationSettingsReturn => {
   const [settings, setSettings] = useState<NotificationSettings>();
+  const {
+    expoPushToken,
+    registerForPushNotifications,
+    unregisterForPushNotifications,
+  } = usePushNotifications();
   const [_, togglePermission] = usePermissions("notifications");
 
   useEffect(() => {
@@ -38,7 +44,12 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
     : undefined;
 
   if (authorized) {
+    registerForPushNotifications();
     togglePermission(true);
+  }
+
+  if (authorized === false) {
+    unregisterForPushNotifications(expoPushToken);
   }
 
   const open = () => {

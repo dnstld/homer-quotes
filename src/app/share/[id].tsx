@@ -8,20 +8,13 @@ import {
   Platform,
   TouchableOpacity,
 } from "react-native";
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import ViewShot from "react-native-view-shot";
+import { useLocalSearchParams } from "expo-router";
+import ViewShot, { captureRef } from "react-native-view-shot";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Clipboard from "expo-clipboard";
 import { Quote } from "../../components/Quote";
 import { Homer } from "../../components/Homer";
-import {
-  SetStateAction,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useContext, useRef, useState } from "react";
 import QuotesContext from "../../context/quotes-context";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 
@@ -31,100 +24,79 @@ export default function ShareScreen() {
   const { id } = useLocalSearchParams();
   const { quotes } = useContext(QuotesContext);
   const [copiedQuote, setCopiedQuote] = useState(false);
-
-  const [URI, setURI] = useState("");
-
   const viewShot = useRef(null);
   const quote = quotes.find((q) => q.id === id);
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(
-      `"${quote?.quote}" - Homer J. Simpson S${quote?.season}:E${quote?.episode} ${quote?.name}`
+      `"${quote?.quote}" - Homer J. Simpson - S${quote?.season}:E${quote?.episode} ${quote?.name}`
     );
     setCopiedQuote(true);
   };
-
-  const onCapture = useCallback(() => {
-    if (viewShot.current) {
-      viewShot.current
-        // @ts-ignore
-        .capture()
-        .then((uri: SetStateAction<string>) => setURI(uri));
-    }
-  }, []);
 
   const imageOptions = {
     dialogTitle: "HomerQuotesApp",
     mimeType: "image/png",
   };
 
-  const save = async () => {
-    if (Platform.OS === "android") {
-      const permissions =
-        await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-      if (permissions.granted) {
-        const base64 = await FileSystem.readAsStringAsync(URI, {
-          encoding: FileSystem.EncodingType.Base64,
-        });
-        await FileSystem.StorageAccessFramework.createFileAsync(
-          permissions.directoryUri,
-          imageOptions.dialogTitle,
-          imageOptions.mimeType
-        )
-          .then(async (URI) => {
-            await FileSystem.writeAsStringAsync(URI, base64, {
-              encoding: FileSystem.EncodingType.Base64,
-            });
-          })
-          .catch((e) => console.warn(`Error: ${e.message} Code: ${e.code}`));
+  const saveAndShare = async () => {
+    try {
+      const uri = await captureRef(viewShot, {
+        fileName: imageOptions.dialogTitle,
+        format: "png",
+        quality: 0.9,
+      });
+
+      if (Platform.OS === "android") {
+        const permissions =
+          await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+        if (permissions.granted) {
+          const base64 = await FileSystem.readAsStringAsync(uri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+          const fileUri =
+            await FileSystem.StorageAccessFramework.createFileAsync(
+              permissions.directoryUri,
+              imageOptions.dialogTitle,
+              imageOptions.mimeType
+            );
+          await FileSystem.writeAsStringAsync(fileUri, base64, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+        } else {
+          await Sharing.shareAsync(uri, imageOptions);
+        }
       } else {
-        Sharing.shareAsync(URI, imageOptions)
-          .then(() => console.log("Success"))
-          .catch((e) => console.warn(`Error: ${e.message} Code: ${e.code}`));
+        await Sharing.shareAsync(uri, imageOptions);
       }
-    } else {
-      Sharing.shareAsync(URI, imageOptions)
-        .then(() => console.log("Success"))
-        .catch((e) => console.warn(`Error: ${e.message} Code: ${e.code}`));
+    } catch (error) {
+      console.warn("Failed to capture and share screenshot", error);
     }
   };
 
-  useEffect(() => {
-    onCapture();
-  }, []);
-
   return (
     <View style={styles.container}>
-      <ViewShot
-        ref={viewShot}
-        options={{
-          fileName: imageOptions.dialogTitle,
-          format: "jpg",
-          quality: 1,
-        }}
-      >
-        <View style={styles.frame}>
-          <View style={styles.profileContainer}>
-            <HomerAvatarSvg style={styles.avatar} />
-            <View style={styles.profile}>
-              <Text style={styles.title}>Homer Quotes</Text>
-              <Text style={styles.subtitle}>@homerquotesapp</Text>
-            </View>
+      <ViewShot ref={viewShot} style={styles.frame}>
+        <View style={styles.profileContainer}>
+          <HomerAvatarSvg style={styles.avatar} />
+          <View style={styles.profile}>
+            <Text style={styles.title}>Homer Quotes</Text>
+            <Text style={styles.subtitle}>@homerquotesapp</Text>
           </View>
+        </View>
 
-          <View style={styles.quoteContainer}>
-            <Quote {...quote!} />
-          </View>
+        <View style={styles.quoteContainer}>
+          <Quote {...quote!} />
+        </View>
 
-          <View style={styles.footerContainer}>
-            <Homer share />
-            <View style={styles.footer}>
-              <Text style={styles.footerName}>Homer J. Simpson</Text>
-              <Text
-                style={styles.footerText}
-                numberOfLines={0}
-              >{`S${quote?.season}:E${quote?.episode} ${quote?.name}`}</Text>
-            </View>
+        <View style={styles.footerContainer}>
+          <Homer share />
+          <View style={styles.footer}>
+            <Text style={styles.footerName}>Homer J. Simpson</Text>
+            <Text
+              style={styles.footerText}
+              numberOfLines={0}
+            >{`S${quote?.season}:E${quote?.episode} ${quote?.name}`}</Text>
           </View>
         </View>
       </ViewShot>
@@ -145,7 +117,7 @@ export default function ShareScreen() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={save}>
+        <TouchableOpacity onPress={saveAndShare}>
           <View style={styles.shareButton}>
             <Ionicons name="share-outline" size={24} color="white" />
             <Text style={styles.shareButtonText}>Share</Text>
@@ -197,12 +169,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     maxWidth: 200,
     gap: 16,
-  },
-  imageContainer: {
-    minHeight: 184,
-  },
-  image: {
-    minHeight: 184,
   },
   footer: {
     paddingRight: 16,

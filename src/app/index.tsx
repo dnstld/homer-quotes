@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: MAGIC_NUMBER,
   },
   episodeContainer: {
-    padding: 32,
+    marginBottom: 64,
     alignItems: "center",
   },
   name: {

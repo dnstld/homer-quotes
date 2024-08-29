@@ -22,7 +22,7 @@ export default function SettingsScreen() {
   const [granted] = usePermissions("notifications");
 
   const handleSettings = async () => {
-    if (!granted && authorized === undefined) {
+    if (!granted && !authorized) {
       registerForPushNotifications();
     } else {
       open();
