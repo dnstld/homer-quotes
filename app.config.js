@@ -44,8 +44,11 @@ export default {
     resizeMode: "contain",
     backgroundColor: "#00AAFF",
   },
+  notifications: {
+    icon: "./assets/notification-icon.png",
+    color: "#00AAFF",
+  },
   ios: {
-    supportsTablet: true,
     bundleIdentifier: getUniqueIdentifier(),
     buildNumber: "1",
     config: {
@@ -56,6 +59,7 @@ export default {
     },
   },
   android: {
+    icon: "./assets/icon-1024x1024.png",
     adaptiveIcon: {
       foregroundImage: "./assets/adaptive-icon.png",
     },
