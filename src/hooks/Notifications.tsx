@@ -11,7 +11,7 @@ export interface PushNotificationState {
   notification?: Notifications.Notification;
   expoPushToken?: string;
   registerForPushNotifications: () => void;
-  unregisterForPushNotifications: (token: string) => Promise<void>;
+  unregisterForPushNotifications: (token: string | undefined) => Promise<void>;
 }
 
 export const usePushNotifications = (): PushNotificationState => {

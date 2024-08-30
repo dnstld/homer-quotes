@@ -43,9 +43,14 @@ const useQuoteAnimation = () => {
 
 const useButtonAnimation = () => {
   const animation = useRef(new Animated.Value(0)).current;
-  const inputRange = [0, 1];
-  const outputRange = [1, 0.8];
-  const scale = animation.interpolate({ inputRange, outputRange });
+  const scale = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0.8],
+  });
+  const scaleOut = animation.interpolate({
+    inputRange: [0, 2],
+    outputRange: [1, 1.1],
+  });
 
   const onPressIn = () => {
     Animated.spring(animation, {
@@ -62,6 +67,7 @@ const useButtonAnimation = () => {
 
   return {
     scale,
+    scaleOut,
     onPressIn,
     onPressOut,
   };
@@ -73,7 +79,7 @@ export default function IndexScreen() {
   const [usedQuotes, setUsedQuotes] = useState<Set<number>>(new Set());
 
   const { fadeAnim, slideAnim, quoteAnimation } = useQuoteAnimation();
-  const { scale, onPressIn, onPressOut } = useButtonAnimation();
+  const { scale, scaleOut, onPressIn, onPressOut } = useButtonAnimation();
 
   useEffect(() => {
     if (quotes.length > 0) {
@@ -156,7 +162,9 @@ export default function IndexScreen() {
           >{`S${currentQuote?.season}:E${currentQuote?.episode} ${currentQuote?.name} (${currentQuote?.time})`}</Text>
         </View>
         <View style={styles.footer}>
-          <Homer />
+          <Animated.View style={[{ transform: [{ scale: scaleOut }] }]}>
+            <Homer />
+          </Animated.View>
           <View style={styles.actionsContainer}>
             <Link
               href={{

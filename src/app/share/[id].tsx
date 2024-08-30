@@ -1,13 +1,6 @@
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Platform,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions, Platform } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import ViewShot, { captureRef } from "react-native-view-shot";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -15,6 +8,7 @@ import * as Clipboard from "expo-clipboard";
 import { Quote } from "../../components/Quote";
 import { Homer } from "../../components/Homer";
 import { useContext, useRef, useState } from "react";
+import AwesomeButton from "react-native-really-awesome-button";
 import QuotesContext from "../../context/quotes-context";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 
@@ -24,6 +18,7 @@ export default function ShareScreen() {
   const { id } = useLocalSearchParams();
   const { quotes } = useContext(QuotesContext);
   const [copiedQuote, setCopiedQuote] = useState(false);
+  const [loading, setLoading] = useState(true);
   const viewShot = useRef(null);
   const quote = quotes.find((q) => q.id === id);
 
@@ -40,6 +35,7 @@ export default function ShareScreen() {
   };
 
   const saveAndShare = async () => {
+    setLoading(true);
     try {
       const uri = await captureRef(viewShot, {
         fileName: imageOptions.dialogTitle,
@@ -72,6 +68,7 @@ export default function ShareScreen() {
     } catch (error) {
       console.warn("Failed to capture and share screenshot", error);
     }
+    setLoading(false);
   };
 
   return (
@@ -101,28 +98,42 @@ export default function ShareScreen() {
         </View>
       </ViewShot>
       <View style={styles.actionsContainer}>
-        <TouchableOpacity onPress={copyToClipboard}>
-          <View style={styles.copyButton}>
-            {copiedQuote ? (
-              <>
-                <Ionicons name="checkmark" size={24} />
-                <Text>Copied!</Text>
-              </>
-            ) : (
-              <>
-                <Ionicons name="copy-outline" size={24} />
-                <Text>Copy</Text>
-              </>
-            )}
-          </View>
-        </TouchableOpacity>
+        <AwesomeButton
+          onPress={copyToClipboard}
+          backgroundColor={"#ffffff"}
+          backgroundDarker={"#d3d3d3"}
+        >
+          {copiedQuote ? (
+            <>
+              <Ionicons name="checkmark" size={24} style={{ marginRight: 8 }} />
+              <Text>Copied!</Text>
+            </>
+          ) : (
+            <>
+              <Ionicons
+                name="copy-outline"
+                size={24}
+                style={{ marginRight: 8 }}
+              />
+              <Text>Copy</Text>
+            </>
+          )}
+        </AwesomeButton>
 
-        <TouchableOpacity onPress={saveAndShare}>
-          <View style={styles.shareButton}>
-            <Ionicons name="share-outline" size={24} color="white" />
-            <Text style={styles.shareButtonText}>Share</Text>
-          </View>
-        </TouchableOpacity>
+        <AwesomeButton
+          progress={loading}
+          onPress={saveAndShare}
+          backgroundColor={"#F8659F"}
+          backgroundDarker={"#c14174"}
+        >
+          <Ionicons
+            name="share-outline"
+            size={24}
+            color="white"
+            style={{ marginRight: 8 }}
+          />
+          <Text style={styles.shareButtonText}>Share</Text>
+        </AwesomeButton>
       </View>
     </View>
   );

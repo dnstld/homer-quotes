@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { startActivityAsync, ActivityAction } from "expo-intent-launcher";
 import { AppState, Linking, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
-import { usePermissions } from "./Permissions";
 import { usePushNotifications } from "./Notifications";
 
 type NotificationSettings = Notifications.NotificationPermissionsStatus;
 
 type UseNotificationSettingsReturn = [
-  { authorized: boolean | undefined },
+  { authorized: boolean },
   () => void,
   NotificationSettings | undefined
 ];
@@ -20,7 +19,6 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
     registerForPushNotifications,
     unregisterForPushNotifications,
   } = usePushNotifications();
-  const [_, togglePermission] = usePermissions("notifications");
 
   useEffect(() => {
     const getSettings = async () => {
@@ -38,22 +36,17 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
     return () => subscription.remove();
   }, []);
 
-  const authorized = settings
-    ? settings?.granted ||
-      settings?.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
-    : undefined;
-
-  if (authorized) {
-    registerForPushNotifications();
-    togglePermission(true);
-  }
-
-  if (authorized === false) {
+  if (settings?.status === "denied") {
     unregisterForPushNotifications(expoPushToken);
   }
 
+  registerForPushNotifications();
+
+  const authorized =
+    settings?.status === "granted" ||
+    settings?.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL;
+
   const open = () => {
-    // track: open notification settings
     if (Platform.OS === "ios") {
       Linking.openURL("app-settings:");
     } else {

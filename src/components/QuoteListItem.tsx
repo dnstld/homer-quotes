@@ -18,7 +18,7 @@ const QuoteListItem = ({ quote, id, episode, time }: QuoteProps) => {
       asChild
     >
       <TouchableOpacity style={styles.pressable}>
-        <Text style={styles.info}>{`Ep. ${("0" + episode).slice(-2)}:`}</Text>
+        <Text style={styles.info}>{`Ep. ${("0" + episode).slice(-2)}.`}</Text>
         <View style={styles.quoteContainer}>
           <Text style={styles.quote}>
             {quote}
@@ -32,25 +32,27 @@ const QuoteListItem = ({ quote, id, episode, time }: QuoteProps) => {
 
 const styles = StyleSheet.create({
   pressable: {
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     gap: 8,
     flexDirection: "row",
+    borderBottomColor: "#ffffff33",
+    borderBottomWidth: 1,
   },
   quoteContainer: {
     flex: 1,
   },
   quote: {
     fontSize: 16,
-    color: "black",
+    color: "white",
   },
   info: {
-    color: "gray",
+    color: "white",
     marginTop: 2,
   },
   time: {
     fontSize: 10,
-    color: "gray",
+    color: "white",
   },
 });
 

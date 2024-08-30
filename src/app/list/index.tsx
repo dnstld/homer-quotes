@@ -3,6 +3,7 @@ import { StyleSheet, Text, SectionList, View } from "react-native";
 import QuoteListItem from "../../components/QuoteListItem";
 import QuotesContext from "../../context/quotes-context";
 import React, { useContext } from "react";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function ListScreen() {
   const { quotes } = useContext(QuotesContext);
@@ -51,21 +52,38 @@ export default function ListScreen() {
       contentContainerStyle={styles.sectionList}
       renderItem={({ item }) => <QuoteListItem {...item} />}
       renderSectionHeader={({ section: { title, season } }) => (
-        <Text style={styles.sectionListHeader}>{`${season}. ${title}`}</Text>
+        <Text style={styles.sectionListHeader}>{`S${season}: ${title}`}</Text>
       )}
       ListHeaderComponent={() => (
         <View style={styles.dashboard}>
           <View style={styles.dashboardItem}>
-            <Text style={styles.dashboardData}>35</Text>
-            <Text style={styles.dashboardName}>seasons</Text>
+            <MaterialCommunityIcons
+              name="television-classic"
+              size={32}
+              color="white"
+            />
+            <View>
+              <Text style={styles.dashboardData}>35</Text>
+              <Text style={styles.dashboardName}>seasons</Text>
+            </View>
           </View>
           <View style={styles.dashboardItem}>
-            <Text style={styles.dashboardData}>768</Text>
-            <Text style={styles.dashboardName}>episodes</Text>
+            <MaterialCommunityIcons name="popcorn" size={32} color="white" />
+            <View>
+              <Text style={styles.dashboardData}>768</Text>
+              <Text style={styles.dashboardName}>episodes</Text>
+            </View>
           </View>
           <View style={styles.dashboardItem}>
-            <Text style={styles.dashboardData}>1765</Text>
-            <Text style={styles.dashboardName}>quotes</Text>
+            <MaterialCommunityIcons
+              name="comment-quote"
+              size={32}
+              color="white"
+            />
+            <View>
+              <Text style={styles.dashboardData}>1765</Text>
+              <Text style={styles.dashboardName}>quotes</Text>
+            </View>
           </View>
         </View>
       )}
@@ -77,6 +95,7 @@ export default function ListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#00AAFF",
   },
   sectionList: {
     paddingBottom: 50,
@@ -87,26 +106,33 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 16,
     fontWeight: "bold",
-    backgroundColor: "#00aaff",
-    color: "yellow",
-    marginBottom: 16,
+    backgroundColor: "#ffffff33",
+    color: "black",
   },
   dashboard: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "white",
+    backgroundColor: "#00aaff",
+    gap: 16,
+    padding: 16,
   },
   dashboardItem: {
     alignItems: "center",
     padding: 16,
     flex: 1,
+    borderWidth: 1,
+    borderColor: "#ffffff33",
+    borderRadius: 8,
+    flexDirection: "row",
+    gap: 4,
   },
   dashboardData: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
+    color: "#ffffff",
   },
   dashboardName: {
     fontSize: 12,
-    color: "#767577",
+    color: "#ffffff",
   },
 });

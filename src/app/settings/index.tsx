@@ -1,3 +1,4 @@
+import React, { useCallback, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,27 +8,20 @@ import {
   Linking,
   Alert,
   TouchableOpacity,
+  Animated,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotificationSettings } from "../../hooks/NotificationSettings";
-import { usePushNotifications } from "../../hooks/Notifications";
-import { usePermissions } from "../../hooks/Permissions";
+import HomerSvg from "../../components/HomerSvg";
+import { useFocusEffect } from "@react-navigation/native";
+import useHomerAnimation from "./hooks";
 
 export default function SettingsScreen() {
   const [{ authorized }, open] = useNotificationSettings();
   const { bottom } = useSafeAreaInsets();
-  const { registerForPushNotifications } = usePushNotifications();
-  const [granted] = usePermissions("notifications");
-
-  const handleSettings = async () => {
-    if (!granted && !authorized) {
-      registerForPushNotifications();
-    } else {
-      open();
-    }
-  };
+  const { slideAnim, rotateInterpolate, startAnimations } = useHomerAnimation();
 
   const openInstagram = async () => {
     const appUrl = "instagram://user?username=homerquotesapp";
@@ -52,6 +46,12 @@ export default function SettingsScreen() {
     }
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      startAnimations();
+    }, [])
+  );
+
   return (
     <ScrollView style={styles.container}>
       <View style={[styles.wrapper, { paddingBottom: bottom }]}>
@@ -72,7 +72,7 @@ export default function SettingsScreen() {
           <Text style={styles.title}>Controls</Text>
 
           {!authorized && (
-            <TouchableOpacity onPress={handleSettings}>
+            <TouchableOpacity onPress={open}>
               <View style={styles.notificationWarning}>
                 <Ionicons name="warning-outline" size={48} color={"white"} />
                 <View style={styles.notificationWarningContent}>
@@ -88,12 +88,34 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           )}
           <View style={styles.controls}>
+            <Animated.View
+              style={[
+                styles.homer,
+                {
+                  transform: [{ translateY: slideAnim }],
+                },
+              ]}
+            >
+              <HomerSvg />
+            </Animated.View>
             <View style={styles.control}>
-              <View>
-                <Text style={styles.controlTitle}>Push notifications</Text>
-                <Text>Notifications designed to bring joy to your day</Text>
-              </View>
-              <Switch onValueChange={handleSettings} value={authorized} />
+              <Animated.View
+                style={[
+                  styles.controlView,
+                  {
+                    transform: [
+                      { rotate: rotateInterpolate },
+                      { perspective: 1000 },
+                    ],
+                  },
+                ]}
+              >
+                <View>
+                  <Text style={styles.controlTitle}>Push notifications</Text>
+                  <Text>Notifications designed to bring joy to your day</Text>
+                </View>
+              </Animated.View>
+              <Switch onValueChange={open} value={authorized} />
             </View>
           </View>
         </View>
@@ -115,6 +137,7 @@ export default function SettingsScreen() {
                 </Text>
               </View>
             </View>
+
             <Text>
               We've created this app to pay tribute to "The Simpsons,"
               celebrating its humor and heart. Although we don't own the rights
@@ -124,6 +147,7 @@ export default function SettingsScreen() {
               hours of pure joy, we hope to bring the show's spirit to fans
               everywhere
             </Text>
+
             <Text>
               We thank Matt Groening, "The Simpsons" creators, and Disney Plus
               for keeping the series accessible. This app wouldn't be possible
@@ -199,6 +223,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 16,
     borderRadius: 8,
+    paddingLeft: 109 + 24,
+  },
+  controlView: {
+    flex: 1,
+    marginRight: 16,
   },
   controlTitle: {
     fontWeight: "bold",
@@ -225,6 +254,12 @@ const styles = StyleSheet.create({
   },
   noteText: {
     color: "white",
+  },
+  homer: {
+    position: "absolute",
+    bottom: 0,
+    left: 16,
+    zIndex: 1,
   },
   footer: {
     textAlign: "center",
