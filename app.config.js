@@ -79,7 +79,6 @@ export default {
   },
   ios: {
     bundleIdentifier: getUniqueIdentifier(),
-    buildNumber: "1",
     config: {
       usesNonExemptEncryption: false,
     },
