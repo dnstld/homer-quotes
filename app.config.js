@@ -60,7 +60,7 @@ export default {
         config: {
           project: process.env.EXPO_PUBLIC_SENTRY_PROJECT,
           organization: process.env.EXPO_PUBLIC_SENTRY_ORG,
-          authToken: process.env.EXPO_PUBLIC_SENTRY_AUTH_TOKEN,
+          authToken: process.env.SENTRY_AUTH_TOKEN,
         },
       },
     ],
