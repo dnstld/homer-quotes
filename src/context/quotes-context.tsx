@@ -29,7 +29,7 @@ export const QuotesProvider: React.FC<{ children: ReactNode }> = ({
     const fetchQuotes = async () => {
       try {
         SplashScreen.preventAutoHideAsync();
-        const response = await fetch("https://api.sharedtattoo.com");
+        const response = await fetch(process.env.EXPO_PUBLIC_API_URL!);
         const { data } = await response.json();
         setQuotes(data);
       } catch (error) {

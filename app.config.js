@@ -39,6 +39,35 @@ export default {
   githubUrl: "https://github.com/dnstld/homer-quotes",
   backgroundColor: "#00AAFF",
   primaryColor: "#00AAFF",
+  build: {
+    development: {
+      developmentClient: true,
+      distribution: "internal",
+      env: {
+        APP_VARIANT: "development",
+      },
+    },
+    production: {
+      env: {
+        APP_VARIANT: "production",
+      },
+    },
+  },
+  hooks: {
+    postPublish: [
+      {
+        file: "sentry-expo/upload-sourcemaps",
+        config: {
+          project: process.env.EXPO_PUBLIC_SENTRY_PROJECT,
+          organization: process.env.EXPO_PUBLIC_SENTRY_ORG,
+          authToken: process.env.EXPO_PUBLIC_SENTRY_AUTH_TOKEN,
+        },
+      },
+    ],
+  },
+  submit: {
+    production: {},
+  },
   splash: {
     image: "./assets/splash.png",
     resizeMode: "contain",
@@ -71,7 +100,7 @@ export default {
     favicon: "./assets/favicon.ico",
     bundler: "metro",
   },
-  plugins: ["expo-router"],
+  plugins: ["expo-router", "sentry-expo"],
   extra: {
     router: {
       origin: false,

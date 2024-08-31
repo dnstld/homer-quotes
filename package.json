@@ -8,6 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eas:login": "eas login",
+    "build:ios": "eas build --platform ios --profile ios-simulator",
     "build:dev:all": "eas build --platform all --profile development",
     "build:dev:android": "eas build --platform android --profile development",
     "build:dev:ios": "eas build --platform ios --profile development",
@@ -20,7 +21,9 @@
   "dependencies": {
     "@expo-google-fonts/acme": "^0.2.3",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@sentry/react-native": "~5.22.0",
     "expo": "~51.0.2",
+    "expo-application": "~5.9.1",
     "expo-clipboard": "~6.0.3",
     "expo-constants": "~16.0.2",
     "expo-dev-client": "~4.0.20",
@@ -46,7 +49,8 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "^15.3.0",
     "react-native-view-shot": "3.8.0",
-    "react-native-web": "~0.19.10"
+    "react-native-web": "~0.19.10",
+    "sentry-expo": "~7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

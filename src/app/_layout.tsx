@@ -1,6 +1,18 @@
 import { Stack, useRouter } from "expo-router";
 import { Button } from "react-native";
 import { QuotesProvider } from "../context/quotes-context";
+import * as Sentry from "sentry-expo";
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DNS,
+  enableInExpoDevelopment: true,
+  tracesSampleRate: 1.0,
+  debug: false,
+  attachScreenshot: true,
+  _experiments: {
+    profilesSampleRate: 1.0,
+  },
+});
 
 const RootLayout = () => {
   const router = useRouter();
