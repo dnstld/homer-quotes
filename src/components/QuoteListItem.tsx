@@ -1,14 +1,13 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Link } from "expo-router";
 import { QuoteProps } from "../context/quotes-context";
 
-const QuoteListItem = ({ quote, id, episode, time }: QuoteProps) => {
+type Props = QuoteProps & {
+  even: boolean;
+};
+
+const QuoteListItem = ({ quote, id, episode, time, even }: Props) => {
+  const backgroundColor = even ? "white" : "#00aaff05";
   return (
     <Link
       href={{
@@ -17,7 +16,7 @@ const QuoteListItem = ({ quote, id, episode, time }: QuoteProps) => {
       }}
       asChild
     >
-      <TouchableOpacity style={styles.pressable}>
+      <TouchableOpacity style={{ ...styles.pressable, backgroundColor }}>
         <Text style={styles.info}>{`Ep. ${("0" + episode).slice(-2)}.`}</Text>
         <View style={styles.quoteContainer}>
           <Text style={styles.quote}>
@@ -36,7 +35,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     gap: 8,
     flexDirection: "row",
-    borderBottomColor: "#ffffff33",
+    borderBottomColor: "#d9d9d9",
     borderBottomWidth: 1,
   },
   quoteContainer: {
@@ -44,15 +43,12 @@ const styles = StyleSheet.create({
   },
   quote: {
     fontSize: 16,
-    color: "white",
   },
   info: {
-    color: "white",
     marginTop: 2,
   },
   time: {
     fontSize: 10,
-    color: "white",
   },
 });
 

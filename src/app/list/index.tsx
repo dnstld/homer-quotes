@@ -8,6 +8,10 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 export default function ListScreen() {
   const { quotes } = useContext(QuotesContext);
 
+  const checkIndexIsEven = (n: number) => {
+    return n % 2 == 0;
+  };
+
   const sortedQuotes = quotes.sort((a, b) => {
     if (Number(a.season) === Number(b.season)) {
       return Number(a.episode) - Number(b.episode);
@@ -50,7 +54,9 @@ export default function ListScreen() {
       }))}
       keyExtractor={(item) => item.id}
       contentContainerStyle={styles.sectionList}
-      renderItem={({ item }) => <QuoteListItem {...item} />}
+      renderItem={({ item, index }) => (
+        <QuoteListItem even={checkIndexIsEven(index)} {...item} />
+      )}
       renderSectionHeader={({ section: { title, season } }) => (
         <Text style={styles.sectionListHeader}>{`S${season}: ${title}`}</Text>
       )}
@@ -95,7 +101,6 @@ export default function ListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#00AAFF",
   },
   sectionList: {
     paddingBottom: 50,
@@ -106,8 +111,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     fontSize: 16,
     fontWeight: "bold",
-    backgroundColor: "#ffffff33",
-    color: "black",
+    backgroundColor: "#F8659F",
+    color: "white",
   },
   dashboard: {
     flexDirection: "row",
