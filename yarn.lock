@@ -2455,7 +2455,7 @@
     "@sentry/utils" "7.119.0"
     localforage "^1.8.1"
 
-"@sentry/react-native@^5.31.1":
+"@sentry/react-native@^5.22.0":
   version "5.31.1"
   resolved "https://registry.yarnpkg.com/@sentry/react-native/-/react-native-5.31.1.tgz#bd32aa2cf4305cf26742e73ae663f31d4917bcad"
   integrity sha512-qk+/RXxcqrleXzyeQ6APlcYm2mI78Up7d711ShFsO+xndF9CowFk1hZvg5gWiGsVFAC0d4s3LGjqc4wMEJlOtw==
