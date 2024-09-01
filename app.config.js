@@ -53,18 +53,6 @@ export default {
       },
     },
   },
-  hooks: {
-    postPublish: [
-      {
-        file: "sentry-expo/upload-sourcemaps",
-        config: {
-          project: process.env.EXPO_PUBLIC_SENTRY_PROJECT,
-          organization: process.env.EXPO_PUBLIC_SENTRY_ORG,
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-        },
-      },
-    ],
-  },
   submit: {
     production: {},
   },
@@ -99,7 +87,17 @@ export default {
     favicon: "./assets/favicon.ico",
     bundler: "metro",
   },
-  plugins: ["expo-router", "sentry-expo"],
+  plugins: [
+    "expo-router",
+    [
+      "@sentry/react-native/expo",
+      {
+        url: "https://sentry.io/",
+        project: process.env.EXPO_PUBLIC_SENTRY_PROJECT,
+        organization: process.env.EXPO_PUBLIC_SENTRY_ORG,
+      },
+    ],
+  ],
   extra: {
     router: {
       origin: false,

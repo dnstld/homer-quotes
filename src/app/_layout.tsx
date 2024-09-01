@@ -1,17 +1,19 @@
 import { Stack, useRouter } from "expo-router";
 import { Button } from "react-native";
 import { QuotesProvider } from "../context/quotes-context";
-import * as Sentry from "sentry-expo";
+import * as Sentry from "@sentry/react-native";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DNS,
-  enableInExpoDevelopment: true,
   tracesSampleRate: 1.0,
-  debug: false,
   attachScreenshot: true,
+  debug: false,
   _experiments: {
     profilesSampleRate: 1.0,
   },
+
+  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
+  // enableSpotlight: __DEV__,
 });
 
 const RootLayout = () => {
