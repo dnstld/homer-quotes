@@ -4160,6 +4160,14 @@ expo-modules-core@1.12.23:
   dependencies:
     invariant "^2.2.4"
 
+expo-navigation-bar@~3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/expo-navigation-bar/-/expo-navigation-bar-3.0.7.tgz#1830a302a89fa5c26cb27ce4cf6ac6c1d22907ff"
+  integrity sha512-KCNHyZ58zoN4xdy7D1lUdJvveCYNVQHGSX4M6xO/SZypvI6GZbLzKSN6Lx4GDGEFxG6Kb+EAckZl48tSiNeGYQ==
+  dependencies:
+    "@react-native/normalize-colors" "0.74.85"
+    debug "^4.3.2"
+
 expo-notifications@~0.28.16:
   version "0.28.16"
   resolved "https://registry.yarnpkg.com/expo-notifications/-/expo-notifications-0.28.16.tgz#2c712a1634c707945eb6c9f31af593c5939f87dc"
@@ -4210,6 +4218,14 @@ expo-structured-headers@~3.8.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/expo-structured-headers/-/expo-structured-headers-3.8.0.tgz#11797a4c3a7a6770b21126cecffcda148030e361"
   integrity sha512-R+gFGn0x5CWl4OVlk2j1bJTJIz4KO8mPoCHpRHmfqMjmrMvrOM0qQSY3V5NHXwp1yT/L2v8aUmFQsBRIdvi1XA==
+
+expo-system-ui@~3.0.7:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/expo-system-ui/-/expo-system-ui-3.0.7.tgz#73fee2a61db435e5d66cbf6407e0987f39c25b4e"
+  integrity sha512-KAs72F5JKhdIfPR9ZNVlRubTPK9uUuevPy5oYEp12xNEzSQcjZKvypH5NpwJuNWkXzrp3n3vZ+3pXsudA7J3KA==
+  dependencies:
+    "@react-native/normalize-colors" "0.74.85"
+    debug "^4.3.2"
 
 expo-updates-interface@~0.16.2:
   version "0.16.2"
