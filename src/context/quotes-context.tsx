@@ -24,11 +24,12 @@ const QuotesContext = createContext<QuotesContextProps>({
   quotes: [],
 });
 
+SplashScreen.preventAutoHideAsync();
+
 export const QuotesProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [quotes, setQuotes] = useState<QuoteProps[]>([]);
-  const [isReady, setIsReady] = useState(false);
 
   const [assets] = useAssets([
     require("../../assets/images/homer-simpson-doughnuts.png"),
@@ -37,37 +38,26 @@ export const QuotesProvider: React.FC<{ children: ReactNode }> = ({
     Acme_400Regular,
   });
 
-  useEffect(() => {
-    const fetchQuotes = async () => {
-      try {
-        // @ts-ignore
-        setQuotes(mockData);
-        // const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-        // const response = await fetch(apiUrl);
-        // const { data } = await response.json();
-        // setQuotes(data);
-      } catch (error) {
-        console.error(`Failed to fetch quotes: ${error}`);
-      } finally {
-        setIsReady(true);
-      }
-    };
-
-    const prepareResources = async () => {
-      try {
-        SplashScreen.preventAutoHideAsync();
-        await fetchQuotes();
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    prepareResources();
-
-    if (isReady && assets && fontsLoaded) {
+  const fetchQuotes = async () => {
+    try {
+      // @ts-ignore
+      setQuotes(mockData);
+      // const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+      // const response = await fetch(apiUrl);
+      // const { data } = await response.json();
+      // setQuotes(data);
+    } catch (error) {
+      console.error(`Failed to fetch quotes: ${error}`);
+    } finally {
       SplashScreen.hideAsync();
     }
-  }, [assets, fontsLoaded, isReady]);
+  };
+
+  useEffect(() => {
+    if (assets && fontsLoaded) {
+      fetchQuotes();
+    }
+  }, [assets, fontsLoaded]);
 
   return (
     <QuotesContext.Provider value={{ quotes }}>

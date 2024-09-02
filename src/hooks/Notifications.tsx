@@ -61,8 +61,16 @@ export const usePushNotifications = (): PushNotificationState => {
         throw new Error("Must use physical device for push notifications");
       }
 
+      if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+        });
+      }
+
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
+
       let finalStatus = existingStatus;
 
       if (existingStatus !== "granted") {
@@ -83,13 +91,6 @@ export const usePushNotifications = (): PushNotificationState => {
 
       if (token?.data) {
         await saveDeviceToken(token.data);
-      }
-
-      if (Platform.OS === "android") {
-        await Notifications.setNotificationChannelAsync("default", {
-          name: "default",
-          importance: Notifications.AndroidImportance.MAX,
-        });
       }
     } catch (error) {
       throw new Error("Failed to register for push notifications: " + error);

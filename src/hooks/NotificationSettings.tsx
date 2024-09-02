@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { startActivityAsync, ActivityAction } from "expo-intent-launcher";
 import { AppState, Linking, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
+
 import { usePushNotifications } from "./Notifications";
 
 type NotificationSettings = Notifications.NotificationPermissionsStatus;
@@ -21,12 +22,28 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
   } = usePushNotifications();
 
   useEffect(() => {
+    const handleRegister = async () => {
+      if (settings?.status === "denied") {
+        if (expoPushToken) {
+          unregisterForPushNotifications(expoPushToken);
+        }
+      } else if (
+        settings?.status === "granted" ||
+        settings?.ios?.status ===
+          Notifications.IosAuthorizationStatus.PROVISIONAL
+      ) {
+        registerForPushNotifications();
+      }
+    };
+
     const getSettings = async () => {
       try {
         const settings = await Notifications.getPermissionsAsync();
         setSettings(settings);
       } catch (error) {
         throw new Error(`Failed to get notification settings: ${error}`);
+      } finally {
+        handleRegister();
       }
     };
 
@@ -37,26 +54,13 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
         getSettings();
       }
     });
-    return () => subscription.remove();
-  }, []);
 
-  useEffect(() => {
-    if (settings?.status === "denied") {
-      if (expoPushToken) {
-        unregisterForPushNotifications(expoPushToken);
+    return () => {
+      if (subscription && typeof subscription.remove === "function") {
+        subscription.remove();
       }
-    } else if (
-      settings?.status === "granted" ||
-      settings?.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
-    ) {
-      registerForPushNotifications();
-    }
-  }, [
-    settings,
-    expoPushToken,
-    registerForPushNotifications,
-    unregisterForPushNotifications,
-  ]);
+    };
+  }, []);
 
   const authorized =
     settings?.status === "granted" ||
@@ -66,7 +70,11 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
     if (Platform.OS === "ios") {
       Linking.openURL("app-settings:");
     } else {
-      startActivityAsync(ActivityAction.NOTIFICATION_SETTINGS);
+      try {
+        startActivityAsync(ActivityAction.NOTIFICATION_SETTINGS);
+      } catch (error) {
+        throw new Error(`Failed to open notification settings: ${error}`);
+      }
     }
   }, []);
 
