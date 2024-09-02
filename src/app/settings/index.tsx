@@ -13,16 +13,18 @@ import {
 import Ionicons from "@expo/vector-icons/Ionicons";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNotificationSettings } from "../../hooks/NotificationSettings";
+// import { useNotificationSettings } from "../../hooks/NotificationSettings";
 import HomerSvg from "../../components/HomerSvg";
 import { useFocusEffect } from "expo-router";
 import useSettingsAnimation from "../../hooks/SettingsAnimation";
 
 export default function SettingsScreen() {
-  const [{ authorized }, open] = useNotificationSettings();
+  // const [{ authorized }, open] = useNotificationSettings();
   const { bottom } = useSafeAreaInsets();
   const { slideAnim, rotateInterpolate, startAnimations } =
     useSettingsAnimation();
+
+  const authorized = true;
 
   const openInstagram = async () => {
     const appUrl = "instagram://user?username=homerquotesapp";
@@ -73,7 +75,7 @@ export default function SettingsScreen() {
           <Text style={styles.title}>Controls</Text>
 
           {!authorized && (
-            <TouchableOpacity onPress={open}>
+            <TouchableOpacity onPress={() => {}}>
               <View style={styles.notificationWarning}>
                 <Ionicons name="warning-outline" size={48} color="white" />
                 <View style={styles.notificationWarningContent}>
@@ -117,7 +119,7 @@ export default function SettingsScreen() {
                   <Text>Notifications designed to bring joy to your day</Text>
                 </View>
               </Animated.View>
-              <Switch onValueChange={open} value={authorized} />
+              <Switch onValueChange={() => {}} value={authorized} />
             </View>
           </View>
         </View>
