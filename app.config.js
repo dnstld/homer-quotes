@@ -90,6 +90,12 @@ export default {
   plugins: [
     "expo-router",
     [
+      "expo-asset",
+      {
+        assets: ["./src/app/assets/images"],
+      },
+    ],
+    [
       "@sentry/react-native/expo",
       {
         url: "https://sentry.io/",

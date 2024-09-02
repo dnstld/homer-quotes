@@ -3,14 +3,13 @@ import * as Sharing from "expo-sharing";
 import { View, Text, StyleSheet, Dimensions, Platform } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import ViewShot, { captureRef } from "react-native-view-shot";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Clipboard from "expo-clipboard";
 import { Quote } from "../../components/Quote";
 import { Homer } from "../../components/Homer";
-import { useContext, useRef, useState } from "react";
-import AwesomeButton from "react-native-really-awesome-button";
+import React, { useContext, useRef, useState } from "react";
 import QuotesContext from "../../context/quotes-context";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
+import { Button } from "../../components/button";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -18,7 +17,7 @@ export default function ShareScreen() {
   const { id } = useLocalSearchParams();
   const { quotes } = useContext(QuotesContext);
   const [copiedQuote, setCopiedQuote] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const viewShot = useRef(null);
   const quote = quotes.find((q) => q.id === id);
 
@@ -59,6 +58,7 @@ export default function ShareScreen() {
           await FileSystem.writeAsStringAsync(fileUri, base64, {
             encoding: FileSystem.EncodingType.Base64,
           });
+          await Sharing.shareAsync(fileUri, imageOptions);
         } else {
           await Sharing.shareAsync(uri, imageOptions);
         }
@@ -66,9 +66,11 @@ export default function ShareScreen() {
         await Sharing.shareAsync(uri, imageOptions);
       }
     } catch (error) {
-      console.warn("Failed to capture and share screenshot", error);
+      throw new Error(`Failed to share: ${error}`);
+      // Show user-friendly message or perform actions if sharing fails
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -98,42 +100,20 @@ export default function ShareScreen() {
         </View>
       </ViewShot>
       <View style={styles.actionsContainer}>
-        <AwesomeButton
+        <Button
+          icon={copiedQuote ? "checkmark" : "copy-outline"}
+          variant="secondary"
           onPress={copyToClipboard}
-          backgroundColor={"#ffffff"}
-          backgroundDarker={"#d3d3d3"}
-        >
-          {copiedQuote ? (
-            <>
-              <Ionicons name="checkmark" size={24} style={{ marginRight: 8 }} />
-              <Text>Copied!</Text>
-            </>
-          ) : (
-            <>
-              <Ionicons
-                name="copy-outline"
-                size={24}
-                style={{ marginRight: 8 }}
-              />
-              <Text>Copy</Text>
-            </>
-          )}
-        </AwesomeButton>
-
-        <AwesomeButton
-          progress={loading}
+          label={copiedQuote ? "Copied!" : "Copy"}
+          border
+        />
+        <Button
+          icon="share-outline"
+          label="Share"
+          loading={loading}
           onPress={saveAndShare}
-          backgroundColor={"#F8659F"}
-          backgroundDarker={"#c14174"}
-        >
-          <Ionicons
-            name="share-outline"
-            size={24}
-            color="white"
-            style={{ marginRight: 8 }}
-          />
-          <Text style={styles.shareButtonText}>Share</Text>
-        </AwesomeButton>
+          border
+        />
       </View>
     </View>
   );
@@ -195,10 +175,12 @@ const styles = StyleSheet.create({
     color: "white",
   },
   actionsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 16,
     gap: 16,
+    alignItems: "flex-end",
+    elevation: 3,
+    position: "absolute",
+    right: 32,
+    bottom: 32,
   },
   copyButton: {
     flexDirection: "row",

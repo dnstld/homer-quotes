@@ -24,6 +24,7 @@
     "@sentry/react-native": "^5.22.0",
     "expo": "~51.0.31",
     "expo-application": "~5.9.1",
+    "expo-asset": "~10.0.10",
     "expo-clipboard": "~6.0.3",
     "expo-constants": "~16.0.2",
     "expo-dev-client": "~4.0.25",

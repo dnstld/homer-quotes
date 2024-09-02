@@ -1,20 +1,18 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Animated } from "react-native";
 
-const useHomerAnimation = () => {
+const useSettingsAnimation = () => {
   const slideAnim = useRef(new Animated.Value(100)).current;
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
-  // Function to execute animations
   const startAnimations = () => {
-    // Slide animation
     Animated.spring(slideAnim, {
       toValue: 0,
       friction: 5,
+      delay: 100,
       useNativeDriver: true,
     }).start();
 
-    // Rotate animation
     Animated.sequence([
       Animated.timing(rotateAnim, {
         toValue: 3,
@@ -34,10 +32,9 @@ const useHomerAnimation = () => {
     ]).start();
   };
 
-  // Interpolate rotation animation
   const rotateInterpolate = rotateAnim.interpolate({
-    inputRange: [0, 5, 10],
-    outputRange: ["-3deg", "5deg", "8deg"],
+    inputRange: [0, 10],
+    outputRange: ["-5deg", "3deg"],
   });
 
   return {
@@ -47,4 +44,4 @@ const useHomerAnimation = () => {
   };
 };
 
-export default useHomerAnimation;
+export default useSettingsAnimation;

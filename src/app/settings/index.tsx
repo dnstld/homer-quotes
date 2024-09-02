@@ -16,40 +16,35 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotificationSettings } from "../../hooks/NotificationSettings";
 import HomerSvg from "../../components/HomerSvg";
 import { useFocusEffect } from "@react-navigation/native";
-import useHomerAnimation from "./hooks";
+import useSettingsAnimation from "./hooks";
 
 export default function SettingsScreen() {
   const [{ authorized }, open] = useNotificationSettings();
   const { bottom } = useSafeAreaInsets();
-  const { slideAnim, rotateInterpolate, startAnimations } = useHomerAnimation();
+  const { slideAnim, rotateInterpolate, startAnimations } =
+    useSettingsAnimation();
 
   const openInstagram = async () => {
     const appUrl = "instagram://user?username=homerquotesapp";
-    const webUrl = "https://www.instagram.com/homerquotesapp";
 
     try {
-      const supportedApp = await Linking.canOpenURL(appUrl);
-
-      if (supportedApp) {
+      const supported = await Linking.canOpenURL(appUrl);
+      if (supported) {
         await Linking.openURL(appUrl);
       } else {
-        const supportedWeb = await Linking.canOpenURL(webUrl);
-        if (supportedWeb) {
-          await Linking.openURL(webUrl);
-        } else {
-          Alert.alert(`Don't know how to open this URL: ${webUrl}`);
-        }
+        Alert.alert(
+          "Instagram app is not installed or supported on this device."
+        );
       }
     } catch (error) {
-      console.error("Error opening URL: ", error);
-      Alert.alert("An error occurred", JSON.stringify(error));
+      throw new Error(`Failed to open Instagram: ${error}`);
     }
   };
 
   useFocusEffect(
     useCallback(() => {
       startAnimations();
-    }, [])
+    }, [startAnimations])
   );
 
   return (
@@ -74,7 +69,7 @@ export default function SettingsScreen() {
           {!authorized && (
             <TouchableOpacity onPress={open}>
               <View style={styles.notificationWarning}>
-                <Ionicons name="warning-outline" size={48} color={"white"} />
+                <Ionicons name="warning-outline" size={48} color="white" />
                 <View style={styles.notificationWarningContent}>
                   <Text style={styles.notificationWarningText}>
                     Enable push notifications for a dose of Homer’s humor. We’ll
@@ -87,6 +82,7 @@ export default function SettingsScreen() {
               </View>
             </TouchableOpacity>
           )}
+
           <View style={styles.controls}>
             <Animated.View
               style={[
@@ -145,7 +141,7 @@ export default function SettingsScreen() {
               has given us countless laughs and unforgettable moments. After
               watching 35 seasons and 768 episodes, spanning more than 1765
               hours of pure joy, we hope to bring the show's spirit to fans
-              everywhere
+              everywhere.
             </Text>
 
             <Text>
@@ -167,7 +163,6 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 16,
     padding: 16,
   },
   wrapper: {
@@ -195,7 +190,6 @@ const styles = StyleSheet.create({
   notificationWarning: {
     flexDirection: "row",
     gap: 16,
-    flex: 1,
     alignItems: "center",
     backgroundColor: "#F8659F",
     padding: 16,
@@ -237,13 +231,12 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   note: {
-    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#00AAFF",
     padding: 16,
     borderRadius: 8,
-    flexDirection: "row",
     gap: 16,
-    alignItems: "center",
   },
   noteAvatar: {
     width: 48,

@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/react-native";
 
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DNS,
+  enabled: process.env.APP_VARIANT === "production",
   tracesSampleRate: 1.0,
   attachScreenshot: true,
   debug: false,

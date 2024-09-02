@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { startActivityAsync, ActivityAction } from "expo-intent-launcher";
 import { AppState, Linking, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
@@ -22,9 +22,14 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
 
   useEffect(() => {
     const getSettings = async () => {
-      const settings = await Notifications.getPermissionsAsync();
-      setSettings(settings);
+      try {
+        const settings = await Notifications.getPermissionsAsync();
+        setSettings(settings);
+      } catch (error) {
+        throw new Error(`Failed to get notification settings: ${error}`);
+      }
     };
+
     getSettings();
 
     const subscription = AppState.addEventListener("change", (nextAppState) => {
@@ -32,27 +37,38 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
         getSettings();
       }
     });
-
     return () => subscription.remove();
   }, []);
 
-  if (settings?.status === "denied") {
-    unregisterForPushNotifications(expoPushToken);
-  }
-
-  registerForPushNotifications();
+  useEffect(() => {
+    if (settings?.status === "denied") {
+      if (expoPushToken) {
+        unregisterForPushNotifications(expoPushToken);
+      }
+    } else if (
+      settings?.status === "granted" ||
+      settings?.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL
+    ) {
+      registerForPushNotifications();
+    }
+  }, [
+    settings,
+    expoPushToken,
+    registerForPushNotifications,
+    unregisterForPushNotifications,
+  ]);
 
   const authorized =
     settings?.status === "granted" ||
     settings?.ios?.status === Notifications.IosAuthorizationStatus.PROVISIONAL;
 
-  const open = () => {
+  const open = useCallback(() => {
     if (Platform.OS === "ios") {
       Linking.openURL("app-settings:");
     } else {
       startActivityAsync(ActivityAction.NOTIFICATION_SETTINGS);
     }
-  };
+  }, []);
 
   return [{ authorized }, open, settings];
 };
