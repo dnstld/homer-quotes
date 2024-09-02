@@ -30,7 +30,7 @@ export const QuotesProvider: React.FC<{ children: ReactNode }> = ({
   const [isReady, setIsReady] = useState(false);
 
   const [assets] = useAssets([
-    require("../../assets/homer-simpson-doughnuts.png"),
+    require("../../assets/images/homer-simpson-doughnuts.png"),
   ]);
   const [fontsLoaded] = useFonts({
     Acme_400Regular,

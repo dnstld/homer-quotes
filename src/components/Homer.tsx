@@ -10,7 +10,7 @@ export const Homer = ({ share = false }) => {
 
   return (
     <Image
-      source={require("../../assets/homer-simpson-doughnuts.png")}
+      source={require("../../assets/images/homer-simpson-doughnuts.png")}
       style={{ width: imageWidth, height: imageHeight }}
       resizeMode="contain"
       alt="Homer Simpson eating doughnuts"
