@@ -3,6 +3,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useAssets } from "expo-asset";
 import { useFonts } from "@expo-google-fonts/acme";
 import { Acme_400Regular } from "@expo-google-fonts/acme";
+import mockData from "../../assets/data/mock.json";
 
 export type QuoteProps = {
   id: string;
@@ -39,20 +40,12 @@ export const QuotesProvider: React.FC<{ children: ReactNode }> = ({
   useEffect(() => {
     const fetchQuotes = async () => {
       try {
-        const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-        if (!apiUrl) {
-          throw new Error("API URL is not defined");
-        }
-
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error(
-            `Failed to fetch quotes, status code: ${response.status}`
-          );
-        }
-
-        const { data } = await response.json();
-        setQuotes(data);
+        // @ts-ignore
+        setQuotes(mockData);
+        // const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+        // const response = await fetch(apiUrl);
+        // const { data } = await response.json();
+        // setQuotes(data);
       } catch (error) {
         console.error(`Failed to fetch quotes: ${error}`);
       } finally {

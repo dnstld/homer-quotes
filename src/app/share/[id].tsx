@@ -19,7 +19,7 @@ export default function ShareScreen() {
   const [copiedQuote, setCopiedQuote] = useState(false);
   const [loading, setLoading] = useState(false);
   const viewShot = useRef(null);
-  const quote = quotes.find((q) => q.id === id);
+  const quote = quotes.find((q) => q.id == id);
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(

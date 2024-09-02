@@ -1,4 +1,10 @@
-import { StyleSheet, Text, SectionList, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SectionList,
+  View,
+  SafeAreaView,
+} from "react-native";
 
 import QuoteListItem from "../../components/QuoteListItem";
 import QuotesContext from "../../context/quotes-context";
@@ -8,9 +14,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 export default function ListScreen() {
   const { quotes } = useContext(QuotesContext);
 
-  const checkIndexIsEven = (n: number) => {
-    return n % 2 == 0;
-  };
+  const checkIndexIsEven = (n: number) => n % 2 === 0;
 
   const sortedQuotes = quotes.sort((a, b) => {
     if (Number(a.season) === Number(b.season)) {
@@ -43,58 +47,52 @@ export default function ListScreen() {
   );
 
   return (
-    <SectionList
-      sections={sections.map((seasonSection) => ({
-        ...seasonSection,
-        data: seasonSection.data.map((episodeSection) => ({
-          ...episodeSection,
-          key: `${seasonSection.season}-${episodeSection.episode}`,
-          data: episodeSection.data,
-        })),
-      }))}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.sectionList}
-      renderItem={({ item, index }) => (
-        <QuoteListItem even={checkIndexIsEven(index)} {...item} />
-      )}
-      renderSectionHeader={({ section: { title, season } }) => (
-        <Text style={styles.sectionListHeader}>{`S${season}: ${title}`}</Text>
-      )}
-      ListHeaderComponent={() => (
-        <View style={styles.dashboard}>
-          <View style={styles.dashboardItem}>
-            <MaterialCommunityIcons
-              name="television-classic"
-              size={32}
-              color="white"
-            />
-            <View>
-              <Text style={styles.dashboardData}>35</Text>
-              <Text style={styles.dashboardName}>seasons</Text>
+    <View style={styles.container}>
+      <SectionList
+        sections={sections}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item, index }) => (
+          <QuoteListItem even={checkIndexIsEven(index)} {...item} />
+        )}
+        renderSectionHeader={({ section: { title, season } }) => (
+          <Text style={styles.sectionListHeader}>{`S${season}: ${title}`}</Text>
+        )}
+        ListHeaderComponent={() => (
+          <View style={styles.dashboard}>
+            <View style={styles.dashboardItem}>
+              <MaterialCommunityIcons
+                name="television-classic"
+                size={32}
+                color="white"
+              />
+              <View>
+                <Text style={styles.dashboardData}>35</Text>
+                <Text style={styles.dashboardName}>seasons</Text>
+              </View>
+            </View>
+            <View style={styles.dashboardItem}>
+              <MaterialCommunityIcons name="popcorn" size={32} color="white" />
+              <View>
+                <Text style={styles.dashboardData}>768</Text>
+                <Text style={styles.dashboardName}>episodes</Text>
+              </View>
+            </View>
+            <View style={styles.dashboardItem}>
+              <MaterialCommunityIcons
+                name="comment-quote"
+                size={32}
+                color="white"
+              />
+              <View>
+                <Text style={styles.dashboardData}>1765</Text>
+                <Text style={styles.dashboardName}>quotes</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.dashboardItem}>
-            <MaterialCommunityIcons name="popcorn" size={32} color="white" />
-            <View>
-              <Text style={styles.dashboardData}>768</Text>
-              <Text style={styles.dashboardName}>episodes</Text>
-            </View>
-          </View>
-          <View style={styles.dashboardItem}>
-            <MaterialCommunityIcons
-              name="comment-quote"
-              size={32}
-              color="white"
-            />
-            <View>
-              <Text style={styles.dashboardData}>1765</Text>
-              <Text style={styles.dashboardName}>quotes</Text>
-            </View>
-          </View>
-        </View>
-      )}
-      style={styles.container}
-    />
+        )}
+        style={styles.sectionList}
+      />
+    </View>
   );
 }
 
@@ -103,7 +101,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionList: {
-    paddingBottom: 50,
     flex: 1,
   },
   sectionListHeader: {
