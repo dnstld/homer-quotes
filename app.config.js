@@ -92,7 +92,7 @@ export default {
     [
       "expo-asset",
       {
-        assets: ["./src/app/assets/images"],
+        assets: ["./assets/images"],
       },
     ],
     [
