@@ -60,6 +60,10 @@ export default {
     image: "./assets/splash.png",
     resizeMode: "contain",
     backgroundColor: "#00AAFF",
+
+    android: {
+      windowIsTranslucent: true,
+    },
   },
   notifications: {
     icon: "./assets/notification-icon.png",

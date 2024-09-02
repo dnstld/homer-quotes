@@ -8,6 +8,7 @@ Sentry.init({
   enabled: process.env.APP_VARIANT === "production",
   tracesSampleRate: 1.0,
   attachScreenshot: true,
+  environment: process.env.APP_VARIANT,
   debug: false,
   _experiments: {
     profilesSampleRate: 1.0,

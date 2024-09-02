@@ -10,7 +10,7 @@ import { Homer } from "../components/Homer";
 import { Button } from "../components/button";
 import QuotesContext, { QuoteProps } from "../context/quotes-context";
 
-import { useHomeAnimation } from "./hooks";
+import { useHomeAnimation } from "../hooks/HomeAnimation";
 import { styles } from "./styles";
 
 const MAGIC_NUMBER = 32;

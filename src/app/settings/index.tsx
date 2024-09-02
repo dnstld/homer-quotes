@@ -15,8 +15,8 @@ import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotificationSettings } from "../../hooks/NotificationSettings";
 import HomerSvg from "../../components/HomerSvg";
-import { useFocusEffect } from "@react-navigation/native";
-import useSettingsAnimation from "./hooks";
+import { useFocusEffect } from "expo-router";
+import useSettingsAnimation from "../../hooks/SettingsAnimation";
 
 export default function SettingsScreen() {
   const [{ authorized }, open] = useNotificationSettings();
@@ -30,14 +30,20 @@ export default function SettingsScreen() {
     try {
       const supported = await Linking.canOpenURL(appUrl);
       if (supported) {
-        await Linking.openURL(appUrl);
+        try {
+          await Linking.openURL(appUrl);
+        } catch (error) {
+          console.error("Error opening Instagram URL:", error);
+          Alert.alert("Failed to open Instagram.", "Please try again later.");
+        }
       } else {
         Alert.alert(
           "Instagram app is not installed or supported on this device."
         );
       }
     } catch (error) {
-      throw new Error(`Failed to open Instagram: ${error}`);
+      console.error("Error checking if Instagram URL is supported:", error);
+      Alert.alert("Something went wrong while trying to open Instagram.");
     }
   };
 
