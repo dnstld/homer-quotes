@@ -11,6 +11,7 @@ export interface PushNotificationState {
   expoPushToken?: string;
   registerForPushNotifications: () => Promise<void>;
   unregisterForPushNotifications: (token: string | undefined) => Promise<void>;
+  saveDeviceToken: (token: string) => Promise<void>;
 }
 
 export const usePushNotifications = (): PushNotificationState => {
@@ -31,14 +32,17 @@ export const usePushNotifications = (): PushNotificationState => {
   const responseListener = useRef<Notifications.Subscription>();
 
   const saveDeviceToken = async (token: string) => {
+    if (!token) return;
     try {
       await set(ref(db, "tokens/" + token.replace(/[^\w\s]/gi, "")), {
         token: token,
         createdAt: new Date().toISOString(),
+        expiresAt: new Date(
+          Date.now() + 1000 * 60 * 60 * 24 * 30 * 3
+        ).toISOString(),
         modelName,
         osName,
         osVersion,
-        env: Constants?.expoConfig?.extra?.env ?? Constants?.appOwnership,
       });
       setExpoPushToken(token);
     } catch (error) {
@@ -78,10 +82,7 @@ export const usePushNotifications = (): PushNotificationState => {
         finalStatus = status;
       }
 
-      if (finalStatus !== "granted") {
-        console.log("* Permission not granted!");
-        return;
-      }
+      if (finalStatus !== "granted") return;
 
       const token = await Notifications.getExpoPushTokenAsync({
         projectId:
@@ -125,5 +126,6 @@ export const usePushNotifications = (): PushNotificationState => {
     notification,
     registerForPushNotifications,
     unregisterForPushNotifications,
+    saveDeviceToken,
   };
 };
