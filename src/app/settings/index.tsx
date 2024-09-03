@@ -14,15 +14,22 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNotificationSettings } from "../../hooks/NotificationSettings";
+import { usePushNotifications } from "../../hooks/PushNotifications";
 import HomerSvg from "../../components/HomerSvg";
 import { useFocusEffect } from "expo-router";
 import useSettingsAnimation from "../../hooks/SettingsAnimation";
+
+import { useState, useEffect, useRef } from "react";
+import * as Notifications from "expo-notifications";
 
 export default function SettingsScreen() {
   const [{ authorized }, open] = useNotificationSettings();
   const { bottom } = useSafeAreaInsets();
   const { slideAnim, rotateInterpolate, startAnimations } =
     useSettingsAnimation();
+
+  const { expoPushToken, notification, registerAndSendNotification } =
+    usePushNotifications();
 
   const openInstagram = async () => {
     const appUrl = "instagram://user?username=homerquotesapp";
@@ -73,7 +80,12 @@ export default function SettingsScreen() {
           <Text style={styles.title}>Controls</Text>
 
           {!authorized && (
-            <TouchableOpacity onPress={open}>
+            <TouchableOpacity
+              onPress={() => {
+                registerAndSendNotification();
+                open();
+              }}
+            >
               <View style={styles.notificationWarning}>
                 <Ionicons name="warning-outline" size={48} color="white" />
                 <View style={styles.notificationWarningContent}>

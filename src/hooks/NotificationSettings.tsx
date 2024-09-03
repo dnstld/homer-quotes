@@ -3,7 +3,7 @@ import { startActivityAsync, ActivityAction } from "expo-intent-launcher";
 import { Alert, AppState, Linking, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 
-import { usePushNotifications } from "./Notifications";
+import { usePushNotifications } from "./PushNotifications";
 
 type NotificationSettings = Notifications.NotificationPermissionsStatus;
 
@@ -16,12 +16,7 @@ type UseNotificationSettingsReturn = [
 export const useNotificationSettings = (): UseNotificationSettingsReturn => {
   const [settings, setSettings] = useState<NotificationSettings>();
   const [authorized, setAuthorized] = useState<boolean>(false);
-  const {
-    expoPushToken,
-    registerForPushNotifications,
-    unregisterForPushNotifications,
-    saveDeviceToken,
-  } = usePushNotifications();
+  const { expoPushToken, registerAndSendNotification } = usePushNotifications();
 
   useEffect(() => {
     const getSettings = async () => {
@@ -50,17 +45,24 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
     };
   }, []);
 
-  if (authorized && expoPushToken) {
-    saveDeviceToken(expoPushToken);
-  }
+  // Alert.alert(
+  //   "Notification Settings",
+  //   `authorized : ${authorized} expoPushToken : ${expoPushToken}`
+  // );
 
-  if (!authorized && expoPushToken) {
-    unregisterForPushNotifications(expoPushToken);
-  }
+  // if (authorized && expoPushToken) {
+  //   saveDeviceToken(expoPushToken);
+  // }
+
+  // if (!authorized && expoPushToken) {
+  //   unregisterForPushNotifications(expoPushToken);
+  // }
 
   const open = useCallback(() => {
     if (settings?.status === "undetermined") {
-      registerForPushNotifications();
+      registerAndSendNotification();
+      // Alert.alert("Please enable notifications in your settings.");
+      // registerForPushNotifications();
       return;
     }
 
