@@ -16,7 +16,7 @@ type UseNotificationSettingsReturn = [
 export const useNotificationSettings = (): UseNotificationSettingsReturn => {
   const [settings, setSettings] = useState<NotificationSettings>();
   const [authorized, setAuthorized] = useState<boolean>(false);
-  const { expoPushToken, registerAndSendNotification } = usePushNotifications();
+  const { expoPushToken } = usePushNotifications();
 
   useEffect(() => {
     const getSettings = async () => {
@@ -59,8 +59,12 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
   // }
 
   const open = useCallback(() => {
+    Alert.alert(
+      "Open otification Settings",
+      `status : ${settings?.status} - token : ${expoPushToken}`
+    );
     if (settings?.status === "undetermined") {
-      registerAndSendNotification();
+      // registerAndSendNotification();
       // Alert.alert("Please enable notifications in your settings.");
       // registerForPushNotifications();
       return;
