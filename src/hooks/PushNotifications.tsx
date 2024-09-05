@@ -77,8 +77,8 @@ async function sendPushNotification(expoPushToken: string) {
   const message = {
     to: expoPushToken,
     sound: "default",
-    title: "Original Title",
-    body: "And here is the body!",
+    title: "D'oh! Guess Who's Here?",
+    body: "That's right, it's me, Homer! I'll be popping in with more fun stuff soon. Now, where's my donut?",
   };
 
   await fetch("https://exp.host/--/api/v2/push/send", {

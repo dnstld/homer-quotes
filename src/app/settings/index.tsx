@@ -23,13 +23,12 @@ import { useState, useEffect, useRef } from "react";
 import * as Notifications from "expo-notifications";
 
 export default function SettingsScreen() {
-  const [{ authorized }, open] = useNotificationSettings();
+  const [{ authorized }, open, settings] = useNotificationSettings();
   const { bottom } = useSafeAreaInsets();
   const { slideAnim, rotateInterpolate, startAnimations } =
     useSettingsAnimation();
 
-  const { expoPushToken, notification, registerAndSendNotification } =
-    usePushNotifications();
+  const { registerAndSendNotification } = usePushNotifications();
 
   const openInstagram = async () => {
     const appUrl = "instagram://user?username=homerquotesapp";
@@ -52,6 +51,15 @@ export default function SettingsScreen() {
       console.error("Error checking if Instagram URL is supported:", error);
       Alert.alert("Something went wrong while trying to open Instagram.");
     }
+  };
+
+  const handleNotifications = () => {
+    Alert.alert(`Settings in handleNotifications:`, JSON.stringify(settings);
+    if (settings?.status === "undetermined") {
+      registerAndSendNotification();
+      return;
+    }
+    open();
   };
 
   useFocusEffect(
@@ -80,7 +88,7 @@ export default function SettingsScreen() {
           <Text style={styles.title}>Controls</Text>
 
           {!authorized && (
-            <TouchableOpacity onPress={open}>
+            <TouchableOpacity onPress={handleNotifications}>
               <View style={styles.notificationWarning}>
                 <Ionicons name="warning-outline" size={48} color="white" />
                 <View style={styles.notificationWarningContent}>
@@ -124,7 +132,7 @@ export default function SettingsScreen() {
                   <Text>Notifications designed to bring joy to your day</Text>
                 </View>
               </Animated.View>
-              <Switch onValueChange={open} value={authorized} />
+              <Switch onValueChange={handleNotifications} value={authorized} />
             </View>
           </View>
         </View>
