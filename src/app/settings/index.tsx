@@ -80,12 +80,7 @@ export default function SettingsScreen() {
           <Text style={styles.title}>Controls</Text>
 
           {!authorized && (
-            <TouchableOpacity
-              onPress={() => {
-                registerAndSendNotification();
-                open();
-              }}
-            >
+            <TouchableOpacity onPress={open}>
               <View style={styles.notificationWarning}>
                 <Ionicons name="warning-outline" size={48} color="white" />
                 <View style={styles.notificationWarningContent}>

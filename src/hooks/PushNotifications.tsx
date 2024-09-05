@@ -31,7 +31,7 @@ async function registerForPushNotificationsAsync() {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
-    Alert.alert("Existing status: ", existingStatus);
+    Alert.alert("Existing status: ", existingStatus); // undetermined
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
@@ -42,7 +42,7 @@ async function registerForPushNotificationsAsync() {
       );
       return;
     }
-    Alert.alert("Final status: ", finalStatus);
+    Alert.alert("Final status: ", finalStatus); // granted
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
@@ -79,7 +79,6 @@ async function sendPushNotification(expoPushToken: string) {
     sound: "default",
     title: "Original Title",
     body: "And here is the body!",
-    data: { someData: "goes here" },
   };
 
   await fetch("https://exp.host/--/api/v2/push/send", {

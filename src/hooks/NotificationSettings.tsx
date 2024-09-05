@@ -22,10 +22,12 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
     const getSettings = async () => {
       try {
         const settings = await Notifications.getPermissionsAsync();
+        Alert.alert(`Settings`, JSON.stringify(settings));
         setSettings(settings);
       } catch (error) {
         throw new Error(`Failed to get notification settings: ${error}`);
       } finally {
+        Alert.alert(`Authorized`, `${!!settings?.granted}`);
         setAuthorized(!!settings?.granted);
       }
     };
@@ -60,13 +62,14 @@ export const useNotificationSettings = (): UseNotificationSettingsReturn => {
 
   const open = useCallback(() => {
     Alert.alert(
-      "Open otification Settings",
-      `status : ${settings?.status} - token : ${expoPushToken}`
+      "Open notification Settings",
+      `status : ${settings?.status} - token : ${expoPushToken} - Authorized : ${authorized}`
     );
-    if (!settings?.status) {
-      registerAndSendNotification();
-      return;
-    }
+    // if (!settings?.status) {
+    //   // undefined
+    //   registerAndSendNotification();
+    //   return;
+    // }
 
     if (Platform.OS === "ios") {
       Linking.openURL("app-settings:");
