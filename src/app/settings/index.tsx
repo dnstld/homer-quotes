@@ -54,7 +54,7 @@ export default function SettingsScreen() {
   };
 
   const handleNotifications = () => {
-    Alert.alert(`Settings in handleNotifications:`, JSON.stringify(settings);
+    Alert.alert(`Settings in handleNotifications:`, JSON.stringify(settings));
     if (settings?.status === "undetermined") {
       registerAndSendNotification();
       return;
