@@ -31,7 +31,6 @@ async function registerForPushNotificationsAsync() {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
-    Alert.alert("Existing status: ", existingStatus); // undetermined
     if (existingStatus !== "granted") {
       const { status } = await Notifications.requestPermissionsAsync();
       finalStatus = status;
@@ -42,12 +41,10 @@ async function registerForPushNotificationsAsync() {
       );
       return;
     }
-    Alert.alert("Final status: ", finalStatus); // granted
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
 
-    Alert.alert("Project ID: ", projectId);
     if (!projectId) {
       handleRegistrationError("Project ID not found");
     }
@@ -59,11 +56,9 @@ async function registerForPushNotificationsAsync() {
       ).data;
       return pushTokenString;
     } catch (e: unknown) {
-      Alert.alert("Error: ", `${e}`);
       handleRegistrationError(`${e}`);
     }
   } else {
-    Alert.alert("Must use physical device for push notifications");
     handleRegistrationError("Must use physical device for push notifications");
   }
 }
@@ -123,7 +118,6 @@ export const usePushNotifications = () => {
 
   const registerAndSendNotification = async () => {
     const token = await registerForPushNotificationsAsync();
-    Alert.alert("Token: ", token);
     setExpoPushToken(token ?? "");
     if (token) {
       await sendPushNotification(token);

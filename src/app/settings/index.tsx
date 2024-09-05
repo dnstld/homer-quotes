@@ -11,16 +11,15 @@ import {
   Animated,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import HomerAvatarSvg from "../../components/HomerAvatarSvg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from "expo-router";
+
 import { useNotificationSettings } from "../../hooks/NotificationSettings";
 import { usePushNotifications } from "../../hooks/PushNotifications";
-import HomerSvg from "../../components/HomerSvg";
-import { useFocusEffect } from "expo-router";
-import useSettingsAnimation from "../../hooks/SettingsAnimation";
 
-import { useState, useEffect, useRef } from "react";
-import * as Notifications from "expo-notifications";
+import HomerSvg from "../../components/HomerSvg";
+import HomerAvatarSvg from "../../components/HomerAvatarSvg";
+import useSettingsAnimation from "../../hooks/SettingsAnimation";
 
 export default function SettingsScreen() {
   const [{ authorized }, open, settings] = useNotificationSettings();
@@ -54,7 +53,7 @@ export default function SettingsScreen() {
   };
 
   const handleNotifications = () => {
-    Alert.alert(`Settings in handleNotifications:`, JSON.stringify(settings));
+    Alert.alert("Settings", JSON.stringify(settings));
     if (settings?.status === "undetermined") {
       registerAndSendNotification();
       return;
