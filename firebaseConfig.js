@@ -1,5 +1,4 @@
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { initializeApp } from "@react-native-firebase/app";
 
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
@@ -13,6 +12,5 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
 
-export { db };
+export { app };

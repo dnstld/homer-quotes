@@ -16,14 +16,6 @@ const getAppName = () => {
   return "Homer Quotes";
 };
 
-const getGoogleServices = () => {
-  if (IS_DEV) {
-    return "./android/app/google-services-dev.json";
-  }
-
-  return "./android/app/google-services.json";
-};
-
 export default {
   name: getAppName(),
   description:
@@ -77,6 +69,7 @@ export default {
     infoPlist: {
       LSApplicationQueriesSchemes: ["instagram"],
     },
+    googleServicesFile: "./GoogleService-Info.plist",
   },
   android: {
     icon: "./assets/icon-1024x1024.png",
@@ -85,7 +78,7 @@ export default {
     },
     package: "com.dnstld.HomerQuotes",
     versionCode: "1",
-    googleServicesFile: getGoogleServices(),
+    googleServicesFile: "./google-services.json",
   },
   web: {
     favicon: "./assets/favicon.ico",
@@ -106,6 +99,15 @@ export default {
         project: "react-native",
         organization: "homer-quotes-app",
         slug: "homer-quotes-app",
+      },
+    ],
+    "@react-native-firebase/app",
+    [
+      "expo-build-properties",
+      {
+        ios: {
+          useFrameworks: "static",
+        },
       },
     ],
   ],
